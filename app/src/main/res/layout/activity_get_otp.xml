@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".GetOTP">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/verification_code"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:text="@string/verification_code"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="100dp"
+        android:textColor="@android:color/black"
+        style="@style/TextAppearance.MaterialComponents.Headline6"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/input_verification"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:text="@string/type_verification"
+        app:layout_constraintTop_toBottomOf="@id/verification_code"
+        android:layout_marginTop="10dp"
+        android:textColor="@android:color/black"
+        style="@style/TextAppearance.MaterialComponents.Body2"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/mob_number"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:text="@string/hidden_num"
+        app:layout_constraintTop_toBottomOf="@id/input_verification"
+        android:textColor="@android:color/black"
+        style="@style/TextAppearance.MaterialComponents.Body2"/>
+
+    <com.mukesh.OtpView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/otp_enter_view"
+        android:inputType="number"
+        android:textColor="@android:color/black"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/mob_number"
+        android:layout_marginTop="30dp"
+        app:itemCount="6"
+        app:viewType="rectangle"
+        app:lineWidth="0dp"
+        android:itemBackground="@color/lightGrey"
+        android:cursorVisible="true"
+        />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:id="@+id/attempts_layout"
+        app:layout_constraintTop_toBottomOf="@id/otp_enter_view"
+        android:layout_marginTop="20dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        >
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/initial_attempts"
+            android:id="@+id/remaining_attempts_num"
+            android:textColor="@android:color/black"
+            android:textSize="10sp"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/black"
+            android:text="@string/attempts"
+            android:layout_marginStart="5dp"
+            android:textSize="10sp"
+            />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:id="@+id/otp_buttons_layout"
+        app:layout_constraintTop_toBottomOf="@id/attempts_layout"
+        android:layout_marginTop="30dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/edit_number"
+            android:id="@+id/change_number"
+            android:textColor="@color/clickable_text"
+            android:clickable="true"
+            android:focusable="true"
+            />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginStart="40dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/resend_seconds"
+                android:textColor="@color/greyDisabled"
+                android:text="(15)"/>
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/resend_otp_button"
+                android:textColor="@color/clickable_text"
+                android:text="@string/resend_otp"
+                android:enabled="false"
+                android:clickable="true"
+                android:focusable="true"
+                android:layout_marginStart="3dp"
+                />
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/otp_buttons_layout">
+
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:indeterminateTint="@android:color/black"
+            android:id="@+id/otp_confirm_progress"
+            android:layout_gravity="center"
+            android:visibility="gone"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textColor="@color/errorRed"
+            android:text="@string/wrong_otp"
+            android:id="@+id/otp_status_message"
+            android:visibility="gone"/>
+
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="@dimen/right_tick"
+            android:id="@+id/otp_right_tick"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_check_black"
+            android:visibility="gone"/>
+    </FrameLayout>
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

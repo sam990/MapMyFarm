@@ -1,3 +1,15 @@
 <resources>
     <string name="app_name">Map My Farm</string>
+    <string name="confirm">Confirm</string>
+    <string name="number_prompt">Mobile Number</string>
+    <string name="verification_code">Verification Code</string>
+    <string name="type_verification">Please enter the verification code sent to</string>
+    <string name="hidden_num">+xxxxxxxxxxxx</string>
+    <string name="initial_attempts">3</string>
+    <string name="attempts">attempts remaining</string>
+    <string name="edit_number">Edit Number</string>
+    <string name="resend_otp">Resend OTP</string>
+    <string name="wrong_otp">Wrong OTP</string>
+    <string name="otp_sent">OTP Sent</string>
+    <string name="otp_sent_error">Unable to send OTP</string>
 </resources>

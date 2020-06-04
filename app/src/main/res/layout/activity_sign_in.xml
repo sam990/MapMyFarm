@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".SignIn">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:id="@+id/signup_logo_view"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/black" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/signup_logo_text"
+            android:text="Map My Farm"
+            android:textColor="@android:color/white"
+            android:layout_gravity="center"
+            android:textSize="50sp"
+            />
+
+    </FrameLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/number_prompt"
+        android:textStyle="bold"
+        style="@style/TextAppearance.MaterialComponents.Headline6"
+        android:textColor="@android:color/black"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/phone_input"
+        android:layout_marginBottom="10dp"
+        android:layout_marginStart="20dp"
+        />
+
+    <com.mapmyfarm.mapmyfarm.MyPhoneInputLayout
+        android:id="@+id/phone_input"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:background="@drawable/number_view_bg"
+        app:layout_constraintBottom_toTopOf="@id/phone_confirm"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/signup_logo_view"
+        />
+
+    <com.google.android.material.button.MaterialButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/phone_confirm"
+        android:text="@string/confirm"
+        android:backgroundTint="@color/confirm_background"
+        android:textAllCaps="false"
+        android:textColor="@android:color/white"
+        app:cornerRadius="20dp"
+        android:elevation="5dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="50dp"
+        android:enabled="false"
+        />
+
+    <com.eyalbira.loadingdots.LoadingDots
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/phone_confirm_loadingdots"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="@+id/phone_confirm"
+        app:layout_constraintBottom_toBottomOf="@+id/phone_confirm"
+        app:layout_constraintStart_toStartOf="@id/phone_confirm"
+        app:layout_constraintEnd_toEndOf="@id/phone_confirm"
+        app:LoadingDots_dots_color="@android:color/white"
+        app:LoadingDots_auto_play="true"
+        app:LoadingDots_dots_count="4"
+        app:LoadingDots_dots_size="5dp"
+        app:LoadingDots_dots_space="4dp"
+
+        app:LoadingDots_loop_duration="800"
+        app:LoadingDots_loop_start_delay="100"
+
+        app:LoadingDots_jump_duration="200"
+        app:LoadingDots_jump_height="8dp"/>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

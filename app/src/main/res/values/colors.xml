@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#008577</color>
-    <color name="colorPrimaryDark">#00574B</color>
-    <color name="colorAccent">#D81B60</color>
+    <color name="colorPrimary">#000000</color>
+    <color name="colorPrimaryDark">#000000</color>
+    <color name="colorAccent">#0578F8</color>
+    <color name="darkBlue">#002461</color>
+    <color name="darkBlueDisabled">#06378B</color>
+    <color name="greyDisabled">#444444</color>
+    <color name="lightGrey">#ADD1D1D1</color>
+    <color name="touchBlue">#0223EE</color>
+    <color name="touchBluePressed">#AD0223EE</color>
+    <color name="errorRed">#B60000</color>
 </resources>
