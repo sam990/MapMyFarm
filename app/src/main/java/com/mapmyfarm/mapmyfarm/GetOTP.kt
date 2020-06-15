@@ -25,6 +25,8 @@ import com.amazonaws.services.cognitoidentityprovider.model.UserNotFoundExceptio
 import com.amazonaws.services.cognitoidentityprovider.model.transform.UserLambdaValidationExceptionUnmarshaller
 import com.google.android.gms.auth.api.phone.SmsRetriever
 import com.mukesh.OtpView
+import java.util.*
+import kotlin.collections.HashMap
 
 
 class GetOTP : AppCompatActivity() {
@@ -55,7 +57,7 @@ class GetOTP : AppCompatActivity() {
             //hide keyboard
             val imm = getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
             imm.hideSoftInputFromWindow(otpView.windowToken, 0)
-            Toast.makeText(applicationContext, otpView.text.toString(), Toast.LENGTH_LONG).show()
+//            Toast.makeText(applicationContext, otpView.text.toString(), Toast.LENGTH_LONG).show()
             verifyOTP(otpView.text.toString())
         }
         receiver = SMSBroadcastReceiver()
@@ -150,7 +152,7 @@ class GetOTP : AppCompatActivity() {
 
         val awsClient = AWSMobileClient.getInstance()
 
-        awsClient.signIn(phoneNum, "abcdefghi", null, object : Callback<SignInResult>{
+        awsClient.signIn(phoneNum, UUID.randomUUID().toString().substring(0, 15) , null, object : Callback<SignInResult>{
             override fun onResult(result: SignInResult?) {
                 println(result?.signInState.toString())
                 when(result?.signInState){
@@ -164,12 +166,8 @@ class GetOTP : AppCompatActivity() {
             }
 
             override fun onError(e: java.lang.Exception?) {
-                when(e){
-                    else -> {
-                        e?.printStackTrace()
-                        resendOTPError()
-                    }
-                }
+                e?.printStackTrace()
+                resendOTPError()
             }
 
         })
@@ -195,16 +193,24 @@ class GetOTP : AppCompatActivity() {
     }
 
     private fun verifyOTPSuccessful() {
-        val attribs = AWSMobileClient.getInstance().userAttributes
         runOnUiThread {
             progressView.visibility = View.GONE
             progressOk.visibility = View.VISIBLE
-            if (attribs["custom:detailsEntered"] == "0") {
-                println("get details")
+        }
+        initialiseUserDetails(this, object : InitialiseUserDetailsCallback{
+            override fun onResult(result: Boolean) {
+                if(result) {
+                    runOnUiThread {successfulOTP()}
+                }
+                else {
+                    runOnUiThread {
+                        getUserDetails()
+                    }
+
+                }
             }
 
-            successfulOTP()
-        }
+        })
     }
 
     private fun verifyOTP(num : String) {
@@ -250,6 +256,12 @@ class GetOTP : AppCompatActivity() {
 
     private fun successfulOTP() {
         setResult(Activity.RESULT_OK)
+        finish()
+    }
+
+    private fun getUserDetails() {
+        val myIntent = Intent(this, GetUserDetails::class.java)
+        startActivity(myIntent)
         finish()
     }
 

@@ -33,7 +33,7 @@ class SMSBroadcastReceiver : BroadcastReceiver() {
                         val matcher = pattern.matcher(message)
                         if (matcher.find()) {
 //                                  Update UI
-                            smsListener?.onReceive(matcher.group(0))
+                            smsListener?.onReceive(matcher.group(0) ?: "")
                         }
 
                     }

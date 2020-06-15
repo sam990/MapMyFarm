@@ -1,0 +1,68 @@
+# this is an auto generated file. This will be overwritten
+query GetFarmDetails($id: ID!) {
+  getFarmDetails(id: $id) {
+    id
+    usermobile
+    area
+    locale
+    coordinatesLat
+    coordinatesLon
+    crop
+    sowing_date
+    planting_mode
+    weeding_mode
+    harvest_cutting_mode
+    fertilizer
+    pesticide
+    land_type
+    farm_id
+    prev_seed_packets
+    prev_seed_price
+    prev_num_labour
+    prev_labour_days
+    prev_labour_charge
+    prev_machine_charge
+    prev_fertilizer_packets
+    prev_fertilizer_charge
+    prev_pesticide_packets
+    prev_pesticide_charge
+    comments
+  }
+}
+query ListFarmDetails(
+  $filter: TableFarmDetailsFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  listFarmDetails(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    items {
+      id
+      usermobile
+      area
+      locale
+      coordinatesLat
+      coordinatesLon
+      crop
+      sowing_date
+      planting_mode
+      weeding_mode
+      harvest_cutting_mode
+      fertilizer
+      pesticide
+      land_type
+      farm_id
+      prev_seed_packets
+      prev_seed_price
+      prev_num_labour
+      prev_labour_days
+      prev_labour_charge
+      prev_machine_charge
+      prev_fertilizer_packets
+      prev_fertilizer_charge
+      prev_pesticide_packets
+      prev_pesticide_charge
+      comments
+    }
+    nextToken
+  }
+}

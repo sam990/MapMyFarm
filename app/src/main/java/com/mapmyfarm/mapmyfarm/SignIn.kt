@@ -59,10 +59,13 @@ class SignIn : AppCompatActivity() {
         }
         phoneConfirm.setOnClickListener {
             setButtonToLoading()
-            Toast.makeText(applicationContext, phoneInput.phoneNumber,Toast.LENGTH_LONG).show()
+//            Toast.makeText(applicationContext, phoneInput.phoneNumber,Toast.LENGTH_LONG).show()
             makeSignInRequest()
         }
-        verifyOTP() //for testing
+//        verifyOTP() //for testing
+        //testing
+//        val myIntent = Intent(this, GetUserDetails::class.java)
+//        startActivity(myIntent)
     }
 
     fun setButtonToLoading(){
@@ -146,7 +149,7 @@ class SignIn : AppCompatActivity() {
         //set button to normal
 
 
-        runOnUiThread(){
+        runOnUiThread{
             setButtonToNormal()
         }
         val myintent = Intent(this, GetOTP::class.java)
@@ -157,6 +160,8 @@ class SignIn : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if(requestCode == OTPRequestCode){
             if (resultCode == Activity.RESULT_OK){
+                val myIntent = Intent(this, Dashboard::class.java)
+                startActivity(myIntent)
                 finish()
             }
         }

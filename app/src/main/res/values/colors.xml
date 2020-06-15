@@ -2,7 +2,7 @@
 <resources>
     <color name="colorPrimary">#000000</color>
     <color name="colorPrimaryDark">#000000</color>
-    <color name="colorAccent">#0578F8</color>
+    <color name="colorAccent">#000000</color>
     <color name="darkBlue">#002461</color>
     <color name="darkBlueDisabled">#06378B</color>
     <color name="greyDisabled">#444444</color>
@@ -10,4 +10,6 @@
     <color name="touchBlue">#0223EE</color>
     <color name="touchBluePressed">#AD0223EE</color>
     <color name="errorRed">#B60000</color>
+    <color name="darkRed">#310000</color>
+    <color name="polygonStrokeColor">#FF00B0FF</color>
 </resources>

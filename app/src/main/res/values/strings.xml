@@ -12,4 +12,27 @@
     <string name="wrong_otp">Wrong OTP</string>
     <string name="otp_sent">OTP Sent</string>
     <string name="otp_sent_error">Unable to send OTP</string>
+    <string name="save">Save</string>
+    <string name="first_name_req">First Name*</string>
+    <string name="first_name">First Name</string>
+    <string name="last_name_req">Last Name*</string>
+    <string name="locale_req">Village/City*</string>
+    <string name="district_req">District*</string>
+    <string name="email_opt">Email (Optional)</string>
+    <string name="state_req">State*</string>
+    <string name="empty_field">This field can\'t be empty</string>
+    <string name="empty_message">No farms have been added</string>
+    <string name="add_farm">Add Farm</string>
+    <string name="contact">Contact</string>
+    <string name="about">About</string>
+    <string name="farm_id">Farm ID:</string>
+    <string name="crop">Crop:</string>
+    <string name="area">Area:</string>
+    <string name="sq_m">acres</string>
+    <string name="date">Date:</string>
+    <string name="sow_date">Sow Date:</string>
+    <string name="title_activity_trace_farm">Map</string>
+    <string name="logout">Logout</string>
+    <string name="ok">OK</string>
+    <string name="about_content">A detailed description will be given here</string>
 </resources>

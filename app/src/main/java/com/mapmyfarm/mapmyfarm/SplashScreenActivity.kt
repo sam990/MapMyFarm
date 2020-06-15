@@ -13,15 +13,15 @@ class SplashScreenActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val appSignatureHelper = AppSignatureHelper(applicationContext)
-        appSignatureHelper.appSignatures;
+//        val appSignatureHelper = AppSignatureHelper(applicationContext)
+//        appSignatureHelper.appSignatures;
+
         val callback = object : Callback<UserStateDetails>{
             override fun onResult(result: UserStateDetails?) {
                 when (result?.userState) {
                     UserState.SIGNED_IN -> {
-                        println("Signed in")
-                        AWSMobileClient.getInstance().signOut()
-                        recreate() //for now
+                        gotoDashboard() //for now
+                        finish()
                     }
                     UserState.SIGNED_OUT-> {
                         val intent = Intent(this@SplashScreenActivity, SignIn::class.java)
@@ -42,5 +42,10 @@ class SplashScreenActivity : AppCompatActivity() {
 
         }
         AWSMobileClient.getInstance().initialize(this, callback)
+    }
+
+    fun gotoDashboard(){
+        val myIntent = Intent(this, Dashboard::class.java)
+        startActivity(myIntent)
     }
 }

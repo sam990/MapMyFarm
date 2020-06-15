@@ -1,0 +1,76 @@
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/trace_farm_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".TraceFarm">
+
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/map"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".TraceFarm" />
+
+
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/trace_confirm"
+        style="@style/Widget.MaterialComponents.FloatingActionButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:fabSize="mini"
+        app:srcCompat="@android:drawable/ic_input_add"
+        app:tint="@android:color/white"
+        android:layout_gravity="bottom|end"
+        android:layout_marginEnd="@dimen/fab_margin_end"
+        android:layout_marginBottom="16dp"
+        />
+
+    <ProgressBar
+        android:id="@+id/progress_confirm"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_gravity="bottom|end"
+        android:layout_marginEnd="@dimen/fab_margin_end"
+        android:layout_marginBottom="16dp"
+        android:maxWidth="40dp"
+        android:maxHeight="40dp"
+        android:indeterminateTint="@android:color/white"
+        android:elevation="6dp"
+        android:visibility="gone"
+        />
+
+
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/trace_reset"
+        style="@style/Widget.MaterialComponents.FloatingActionButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center"
+
+        android:layout_marginBottom="16dp"
+
+        app:fabSize="mini"
+        app:srcCompat="@drawable/ic_reset"
+        app:tint="@android:color/white" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/trace_dismiss"
+        style="@style/Widget.MaterialComponents.FloatingActionButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|start"
+
+        android:layout_marginBottom="16dp"
+        android:layout_marginStart="@dimen/fab_margin_end"
+
+        app:fabSize="mini"
+        app:srcCompat="@drawable/ic_back"
+        app:tint="@android:color/white" />
+
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

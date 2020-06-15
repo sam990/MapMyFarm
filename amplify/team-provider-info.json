@@ -1,0 +1,15 @@
+{
+    "mapmyfarm": {
+        "awscloudformation": {
+            "AuthRoleName": "amplify-mapmyfarm-mapmyfarm-194449-authRole",
+            "UnauthRoleArn": "arn:aws:iam::214872758410:role/amplify-mapmyfarm-mapmyfarm-194449-unauthRole",
+            "AuthRoleArn": "arn:aws:iam::214872758410:role/amplify-mapmyfarm-mapmyfarm-194449-authRole",
+            "Region": "ap-south-1",
+            "DeploymentBucketName": "amplify-mapmyfarm-mapmyfarm-194449-deployment",
+            "UnauthRoleName": "amplify-mapmyfarm-mapmyfarm-194449-unauthRole",
+            "StackName": "amplify-mapmyfarm-mapmyfarm-194449",
+            "StackId": "arn:aws:cloudformation:ap-south-1:214872758410:stack/amplify-mapmyfarm-mapmyfarm-194449/70f28430-a024-11ea-814e-0603bc2e8e1c",
+            "AmplifyAppId": "d2y8f42gsamw1"
+        }
+    }
+}

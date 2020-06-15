@@ -1,0 +1,127 @@
+# this is an auto generated file. This will be overwritten
+subscription OnCreateFarmDetails(
+  $id: ID
+  $usermobile: String
+  $area: Float
+  $locale: String
+  $coordinatesLat: [Float]
+) {
+  onCreateFarmDetails(
+    id: $id
+    usermobile: $usermobile
+    area: $area
+    locale: $locale
+    coordinatesLat: $coordinatesLat
+  ) {
+    id
+    usermobile
+    area
+    locale
+    coordinatesLat
+    coordinatesLon
+    crop
+    sowing_date
+    planting_mode
+    weeding_mode
+    harvest_cutting_mode
+    fertilizer
+    pesticide
+    land_type
+    farm_id
+    prev_seed_packets
+    prev_seed_price
+    prev_num_labour
+    prev_labour_days
+    prev_labour_charge
+    prev_machine_charge
+    prev_fertilizer_packets
+    prev_fertilizer_charge
+    prev_pesticide_packets
+    prev_pesticide_charge
+    comments
+  }
+}
+subscription OnUpdateFarmDetails(
+  $id: ID
+  $usermobile: String
+  $area: Float
+  $locale: String
+  $coordinatesLat: [Float]
+) {
+  onUpdateFarmDetails(
+    id: $id
+    usermobile: $usermobile
+    area: $area
+    locale: $locale
+    coordinatesLat: $coordinatesLat
+  ) {
+    id
+    usermobile
+    area
+    locale
+    coordinatesLat
+    coordinatesLon
+    crop
+    sowing_date
+    planting_mode
+    weeding_mode
+    harvest_cutting_mode
+    fertilizer
+    pesticide
+    land_type
+    farm_id
+    prev_seed_packets
+    prev_seed_price
+    prev_num_labour
+    prev_labour_days
+    prev_labour_charge
+    prev_machine_charge
+    prev_fertilizer_packets
+    prev_fertilizer_charge
+    prev_pesticide_packets
+    prev_pesticide_charge
+    comments
+  }
+}
+subscription OnDeleteFarmDetails(
+  $id: ID
+  $usermobile: String
+  $area: Float
+  $locale: String
+  $coordinatesLat: [Float]
+) {
+  onDeleteFarmDetails(
+    id: $id
+    usermobile: $usermobile
+    area: $area
+    locale: $locale
+    coordinatesLat: $coordinatesLat
+  ) {
+    id
+    usermobile
+    area
+    locale
+    coordinatesLat
+    coordinatesLon
+    crop
+    sowing_date
+    planting_mode
+    weeding_mode
+    harvest_cutting_mode
+    fertilizer
+    pesticide
+    land_type
+    farm_id
+    prev_seed_packets
+    prev_seed_price
+    prev_num_labour
+    prev_labour_days
+    prev_labour_charge
+    prev_machine_charge
+    prev_fertilizer_packets
+    prev_fertilizer_charge
+    prev_pesticide_packets
+    prev_pesticide_charge
+    comments
+  }
+}
