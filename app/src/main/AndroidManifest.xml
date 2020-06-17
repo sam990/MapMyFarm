@@ -25,6 +25,7 @@
         android:theme="@style/AppTheme">
         <activity android:name=".FarmDisplay"></activity>
         <activity android:name=".FarmInput" />
+        <activity android:name=".FarmEdit" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").

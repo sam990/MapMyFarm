@@ -6,10 +6,10 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 data class FarmClass(
-    val id: String?,
+    val id: String,
     val area: Double?,
     val farmID: String?,
-    val sowingDate: Date?,
+    val sowingDate: Date,
     val latList: ArrayList<Double>?,
     val lngList: ArrayList<Double>?,
     val crop: String?,

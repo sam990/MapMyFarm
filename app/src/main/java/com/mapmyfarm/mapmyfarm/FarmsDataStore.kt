@@ -134,7 +134,7 @@ object FarmsDataStore {
         ).enqueue(callback)
     }
 
-    fun deleteTaggedLocation(id: String, userCallback: DataStoreOperationCallback) {
+    fun deleteFarm(id: String, userCallback: DataStoreOperationCallback) {
         val callback: GraphQLCall.Callback<DeleteFarmDetailsMutation.Data> =
             object : GraphQLCall.Callback<DeleteFarmDetailsMutation.Data>() {
                 override fun onResponse(@Nonnull response: Response<DeleteFarmDetailsMutation.Data>) {
@@ -152,7 +152,7 @@ object FarmsDataStore {
         ).enqueue(callback)
     }
 
-    fun updateTaggedLocation(
+    fun updateFarm(
         id: String,
         farmID: String?,
         sowingDate: Date?,

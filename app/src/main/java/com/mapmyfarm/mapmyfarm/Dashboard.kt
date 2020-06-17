@@ -27,7 +27,7 @@ import com.google.android.material.button.MaterialButton
 
 
 private const val LOCATION_PERMISSION_REQUEST_CODE = 990
-private const val TAG = "Dashboard"
+const val TAG = "Dashboard"
 
 class Dashboard : AppCompatActivity(), OnFarmCardClickListener {
 
@@ -152,7 +152,9 @@ class Dashboard : AppCompatActivity(), OnFarmCardClickListener {
     }
 
     override fun onCardClick(position: Int) {
-        println("Clicked")
+        val myIntent = Intent(this, FarmDisplay::class.java)
+        myIntent.putExtra("DATA_INDEX", position)
+        startActivity(myIntent)
     }
 
     private fun initialiseAddFarm() {

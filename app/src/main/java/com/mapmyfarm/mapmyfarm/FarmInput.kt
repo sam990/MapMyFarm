@@ -20,7 +20,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 
-class FarmInput : AppCompatActivity() {
+open class FarmInput : AppCompatActivity() {
 
     lateinit var saveButton: MaterialButton
     lateinit var cancelButton: MaterialButton
@@ -84,7 +84,7 @@ class FarmInput : AppCompatActivity() {
                 it.text = getString(R.string.save)
                 loadingDots.visibility = View.GONE
             } else {
-                saveFarm()
+                performOperation()
             }
         }
         cancelButton.setOnClickListener {
@@ -255,7 +255,7 @@ class FarmInput : AppCompatActivity() {
         return allOkay
     }
 
-    private fun saveFarm() {
+    protected open fun performOperation() {
         val sdf = SimpleDateFormat("yyyy/MM/dd")
         val date = sdf.parse(sowDateInput.editText?.text.toString())
         val farmID = (farmsList.size + 1).toString().padStart(3 , '0')
