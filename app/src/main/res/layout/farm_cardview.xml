@@ -20,84 +20,95 @@
 
 
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginStart="8dp"
-                android:gravity="center_vertical"
-                android:padding="5dp"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="8dp"
+            android:gravity="center_vertical"
+            android:padding="5dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/cardview_tag"
+                style="@style/TextAppearance.MaterialComponents.Headline6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="5dp"
+                android:text="@string/farm_id"
+                android:textColor="@android:color/white"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/cardview_crop">
+
+            </TextView>
+
+            <TextView
+                android:id="@+id/cardview_farmid"
+                style="@style/TextAppearance.MaterialComponents.Headline6"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:text="@string/farm_id"
+                android:textColor="@android:color/white"
+                app:layout_constraintBottom_toBottomOf="@+id/cardview_tag"
+                app:layout_constraintStart_toEndOf="@id/cardview_tag"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/cardview_tag">
+
+            </TextView>
+
+            <TextView
+                android:id="@+id/cardview_crop"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:text="@string/harvest_product"
+                android:textColor="@android:color/white"
+                app:layout_constraintBottom_toTopOf="@id/linearLayout"
+                app:layout_constraintStart_toStartOf="@id/linearLayout"
+                app:layout_constraintTop_toBottomOf="@id/cardview_tag">
+
+            </TextView>
+
+            <TextView
+                android:id="@+id/cardview_crop_value"
+                style="@style/TextAppearance.MaterialComponents.Body1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/crop"
+                android:textColor="@android:color/white"
+                android:layout_marginStart="5dp"
+                app:layout_constraintBottom_toBottomOf="@id/cardview_crop"
+                app:layout_constraintStart_toEndOf="@id/cardview_crop"
+                app:layout_constraintTop_toTopOf="@id/cardview_crop">
+
+            </TextView>
+
+
+
+            <LinearLayout
+                android:id="@+id/linearLayout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:orientation="horizontal"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+                app:layout_constraintStart_toStartOf="@+id/cardview_tag"
+                app:layout_constraintTop_toBottomOf="@+id/cardview_crop">
 
-                <TextView
-                    android:id="@+id/cardview_tag"
-                    style="@style/TextAppearance.MaterialComponents.Headline6"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="5dp"
-                    android:layout_marginTop="5dp"
-                    android:text="@string/farm_id"
-                    android:textColor="@android:color/white"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toTopOf="@id/cardview_crop">
-
-                </TextView>
-
-                <TextView
-                    android:id="@+id/cardview_farmid"
-                    style="@style/TextAppearance.MaterialComponents.Headline6"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="5dp"
-                    android:text="@string/farm_id"
-                    android:textColor="@android:color/white"
-                    app:layout_constraintBottom_toBottomOf="@+id/cardview_tag"
-                    app:layout_constraintStart_toEndOf="@id/cardview_tag"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/cardview_tag">
-
-                </TextView>
-
-                <TextView
-                    android:id="@+id/cardview_crop"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:text="@string/crop"
-                    android:textColor="@android:color/white"
-                    app:layout_constraintBottom_toTopOf="@id/linearLayout"
-                    app:layout_constraintStart_toStartOf="@id/linearLayout"
-                    app:layout_constraintTop_toBottomOf="@id/cardview_tag">
-
-                </TextView>
-
-                <TextView
-                    android:id="@+id/cardview_crop_value"
-                    style="@style/TextAppearance.MaterialComponents.Body1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/crop"
-                    android:textColor="@android:color/white"
-                    android:layout_marginStart="5dp"
-                    app:layout_constraintBottom_toBottomOf="@id/cardview_crop"
-                    app:layout_constraintStart_toEndOf="@id/cardview_crop"
-                    app:layout_constraintTop_toTopOf="@id/cardview_crop">
-
-                </TextView>
 
                 <TextView
                     android:id="@+id/cardview_date"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/sow_date"
-                    android:textColor="@android:color/white"
-                    android:layout_marginStart="16dp"
-                    app:layout_constraintBottom_toBottomOf="@id/cardview_crop"
-                    app:layout_constraintStart_toEndOf="@id/cardview_crop_value"
-                    app:layout_constraintTop_toTopOf="@id/cardview_crop"/>
+                    android:textColor="@android:color/white" />
 
                 <TextView
                     android:id="@+id/cardview_date_value"
@@ -107,58 +118,45 @@
                     android:text="@string/sow_date"
                     android:textColor="@android:color/white"
                     android:layout_marginStart="5dp"
-                    app:layout_constraintBottom_toBottomOf="@id/cardview_crop"
-                    app:layout_constraintStart_toEndOf="@id/cardview_date"
-                    app:layout_constraintTop_toTopOf="@id/cardview_crop">
+                    android:layout_marginEnd="20dp"
+                    >
 
                 </TextView>
 
-                <LinearLayout
-                    android:id="@+id/linearLayout"
-                    android:layout_width="0dp"
+                <TextView
+                    android:id="@+id/cardview_area"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:layout_marginBottom="5dp"
-                    android:orientation="horizontal"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="@+id/cardview_tag"
-                    app:layout_constraintTop_toBottomOf="@+id/cardview_crop">
+                    android:layout_marginEnd="5dp"
+                    android:textColor="@android:color/white"
+                    android:text="@string/area">
 
-                    <TextView
-                        android:id="@+id/cardview_area"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="5dp"
-                        android:textColor="@android:color/white"
-                        android:text="@string/area">
+                </TextView>
 
-                    </TextView>
+                <TextView
+                    android:id="@+id/cardview_area_value"
+                    style="@style/TextAppearance.MaterialComponents.Body1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="5dp"
+                    android:textColor="@android:color/white"
+                    android:text="@string/area">
 
-                    <TextView
-                        android:id="@+id/cardview_area_value"
-                        style="@style/TextAppearance.MaterialComponents.Body1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="5dp"
-                        android:textColor="@android:color/white"
-                        android:text="@string/area">
+                </TextView>
 
-                    </TextView>
+                <TextView
+                    android:id="@+id/cardview_area_unit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@android:color/white"
+                    android:text="@string/sq_m">
 
-                    <TextView
-                        android:id="@+id/cardview_area_unit"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="@android:color/white"
-                        android:text="@string/sq_m">
+                </TextView>
 
-                    </TextView>
-
-                </LinearLayout>
+            </LinearLayout>
 
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.cardview.widget.CardView>
 

@@ -46,7 +46,7 @@ class TraceFarm : FragmentActivity(), OnMapReadyCallback {
         const val POLYGON_PADDING = 200
         var imageSize = 300
         private const val distanceBetweenPoints = 1.0
-        const val ACRE_CONVERSION_RATE = 247.10538146717
+        const val ACRE_CONVERSION_RATE = 4047
     }
 
     private var mMap: GoogleMap? = null
@@ -60,10 +60,10 @@ class TraceFarm : FragmentActivity(), OnMapReadyCallback {
     private var mLocationCallback: LocationCallback? = null
     private var currentCounter = 0
     var area = 0.0
-    private var traceConfirm: FloatingActionButton? = null
-    private var traceReset: FloatingActionButton? = null
-    private var traceDismiss: FloatingActionButton? = null
-    private var progressBar: ProgressBar? = null
+    private lateinit var traceConfirm: FloatingActionButton
+    private lateinit var traceReset: FloatingActionButton
+    private lateinit var traceDismiss: FloatingActionButton
+    private lateinit var progressBar: ProgressBar
     private var locationUpdateEnabled = false
     private lateinit var pointsList: ArrayList<LatLng>
     @Volatile
@@ -159,11 +159,11 @@ class TraceFarm : FragmentActivity(), OnMapReadyCallback {
         }
     }
 
-    private fun locationChanged(location: Location) {
+    private fun locationChanged(location: Location?) {
         if (location == null) {
             showError("Unable to get location")
+            return
         }
-        assert(location != null)
         val latLng = LatLng(location.latitude, location.longitude)
         if (isTracing) {
             if (++currentCounter == DELAY) {
@@ -264,23 +264,36 @@ class TraceFarm : FragmentActivity(), OnMapReadyCallback {
         traceConfirm?.setOnClickListener {
             run {
                 if (!isTracing) {
-                    polygon = mMap!!.addPolygon(
-                        PolygonOptions()
-                            .add(
-                                lastMarker?.position,
-                                lastMarker?.position
-                            ).strokeColor(R.color.polygonStrokeColor)
-                    )
+
+                    if (mMap != null && lastMarker != null) {
+
+                        polygon = mMap?.addPolygon(
+                            PolygonOptions()
+                                .add(
+                                    lastMarker?.position,
+                                    lastMarker?.position
+                                ).strokeColor(R.color.polygonStrokeColor)
+                        )
 
 //                    mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(-27.457, 153.040)));
-                    isTracing = true
-                    traceConfirm?.setImageResource(R.drawable.ic_send)
-                    Snackbar.make(
-                        findViewById(R.id.trace_confirm),
-                        "Move along perimeter, press same button to finish", Snackbar.LENGTH_LONG
-                    )
-                        .setAction("Action", null)
-                        .show()
+                        isTracing = true
+                        traceConfirm?.setImageResource(R.drawable.ic_send)
+                        Snackbar.make(
+                                findViewById(R.id.trace_confirm),
+                                "Move along perimeter, press same button to finish", Snackbar.LENGTH_LONG
+                            )
+                            .setAction("Action", null)
+                            .show()
+
+                    } else {
+                        Snackbar.make(
+                                findViewById(R.id.trace_confirm),
+                                "Locations not loaded. Please try again.", Snackbar.LENGTH_LONG
+                            )
+                            .setAction("Action", null)
+                            .show()
+                    }
+
                 } else {
                     if (polygon!!.points.size < 4) {
                         Snackbar.make(
@@ -321,9 +334,9 @@ class TraceFarm : FragmentActivity(), OnMapReadyCallback {
     }
 
     private fun hideTraceButtons() {
-        traceConfirm!!.hide()
-        traceReset!!.hide()
-        traceDismiss!!.hide()
+        traceConfirm.hide()
+        traceReset.hide()
+        traceDismiss.hide()
     }
 
     private fun getLocationAndCalculateArea() {
@@ -339,15 +352,15 @@ class TraceFarm : FragmentActivity(), OnMapReadyCallback {
                 } catch (e: IOException) {
                     e.printStackTrace()
                 }
-                area = SphericalUtil.computeArea(pointsList) * ACRE_CONVERSION_RATE
+                area = SphericalUtil.computeArea(pointsList) / ACRE_CONVERSION_RATE
                 runOnUiThread { tracingComplete() }
             }).start()
         }
 
     private fun showTraceButtons() {
-        traceConfirm!!.show()
-        traceReset!!.show()
-        traceDismiss!!.show()
+        traceConfirm.show()
+        traceReset.show()
+        traceDismiss.show()
     }
 
     private fun tracingComplete() {

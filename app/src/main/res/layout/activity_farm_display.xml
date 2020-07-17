@@ -17,45 +17,21 @@
             tools:context=".FarmDisplay" />
 
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/edit_tag"
-        style="@style/Widget.MaterialComponents.FloatingActionButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
 
-        android:layout_marginEnd="@dimen/fab_margin_end"
-        android:layout_marginBottom="16dp"
-
-        app:fabSize="mini"
-        app:srcCompat="@drawable/ic_edit"
-        app:tint="@android:color/white"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/delete_area"
         style="@style/Widget.MaterialComponents.FloatingActionButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|center"
+        android:layout_gravity="bottom|right"
 
         android:layout_marginBottom="16dp"
+        android:layout_marginEnd="16dp"
 
-        app:fabSize="mini"
         app:srcCompat="@drawable/ic_delete"
         app:tint="@android:color/white" />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/view_dismiss"
-        style="@style/Widget.MaterialComponents.FloatingActionButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|start"
 
-        android:layout_marginBottom="16dp"
-        android:layout_marginStart="@dimen/fab_margin_end"
-
-        app:fabSize="mini"
-        app:srcCompat="@drawable/ic_back"
-        app:tint="@android:color/white" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

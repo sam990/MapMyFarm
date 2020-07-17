@@ -35,4 +35,11 @@
     <string name="logout">Logout</string>
     <string name="ok">OK</string>
     <string name="about_content">A detailed description will be given here</string>
+    <string name="refresh">Refresh</string>
+    <string name="view_farm">View Farm</string>
+    <string name="harvest_product">Harvest Product:</string>
+    <string name="mapmyfarm">MapMyFarm</string>
+    <string name="email_not_valid">Email is not valid</string>
+    <string name="err_saving_details">Error saving details</string>
+    <string name="mapmyfarm_contact">tel:+918374474447</string>
 </resources>

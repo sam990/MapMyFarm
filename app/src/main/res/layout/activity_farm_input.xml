@@ -29,10 +29,24 @@
                 android:layout_marginTop="5dp"
                 android:text="Fields with * are compulsory"/>
 
+            <Switch
+                android:id="@+id/details_switch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Survey Details"
+                android:textOn="Enabled"
+                android:textOff="Disabled"
+                android:layout_marginTop="16dp"
+                android:layout_gravity="center"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:switchPadding="16dp"
+                android:textColor="@color/darkRed"/>
+
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Crop*"
+                android:hint="Final Harvest Product*"
                 android:id="@+id/crop_input"
                 android:layout_marginTop="16dp"
                 android:layout_marginStart="16dp"
@@ -43,33 +57,50 @@
                     android:layout_height="wrap_content"/>
             </com.google.android.material.textfield.TextInputLayout>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@android:color/black"
-                android:text="Previous seed details"
-                android:layout_marginTop="16dp"
-                android:layout_marginStart="16dp"/>
-
-            <androidx.constraintlayout.widget.ConstraintLayout
+            <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:layout_marginTop="5dp"
+                android:hint="Seed Brand"
+                android:id="@+id/seed_brand_input"
+                android:layout_marginTop="16dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/seed_survey"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginTop="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/seed_details_textview"
+                    android:textColor="@android:color/black"
+                    android:text="Previous seed details"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" />
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:hint="Number of packets"
                     android:id="@+id/seednum"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/seed_details_textview"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toStartOf="@id/seedprice"
-                    android:layout_marginEnd="5dp">
+                    android:layout_marginEnd="5dp"
+                    android:layout_marginTop="5dp">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:layout_width="match_parent"
@@ -82,8 +113,8 @@
                     android:layout_height="wrap_content"
                     android:hint="Price per packet"
                     android:id="@+id/seedprice"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/seednum"
+                    app:layout_constraintBottom_toBottomOf="@id/seednum"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@id/seednum"
                     android:layout_marginStart="5dp">
@@ -94,18 +125,20 @@
                         android:inputType="number"/>
                 </com.google.android.material.textfield.TextInputLayout>
 
-
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/seed_total"
+                    android:textColor="@color/darkRed"
+                    android:layout_marginTop="2dp"
+                    android:textSize="16sp"
+                    app:layout_constraintTop_toBottomOf="@id/seednum"
+                    app:layout_constraintStart_toStartOf="@id/seednum"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/seed_total"
-                android:textColor="@color/darkRed"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="2dp"
-                android:textSize="16sp" />
+
 
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
@@ -166,33 +199,38 @@
                     android:layout_height="wrap_content"/>
             </com.google.android.material.textfield.TextInputLayout>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@android:color/black"
-                android:text="Previous labour cost details"
-                android:layout_marginTop="16dp"
-                android:layout_marginStart="16dp"/>
+
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:id="@+id/labour_survey"
+                android:visibility="gone"
                 android:orientation="horizontal"
                 android:gravity="center_vertical"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="16dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/labour_details_textview"
+                    android:textColor="@android:color/black"
+                    android:text="Previous labour cost details"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" />
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:hint="Number of workers"
                     android:id="@+id/workernum"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/labour_details_textview"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toStartOf="@id/workerdays"
-                    android:layout_marginEnd="5dp">
+                    android:layout_marginEnd="5dp"
+                    android:layout_marginTop="5dp">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:layout_width="match_parent"
@@ -205,8 +243,8 @@
                     android:layout_height="wrap_content"
                     android:hint="Working days"
                     android:id="@+id/workerdays"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/workernum"
+                    app:layout_constraintBottom_toBottomOf="@id/workernum"
                     app:layout_constraintEnd_toStartOf="@id/workerwage"
                     app:layout_constraintStart_toEndOf="@id/workernum"
                     android:layout_marginStart="5dp">
@@ -222,8 +260,8 @@
                     android:layout_height="wrap_content"
                     android:hint="Worker wage"
                     android:id="@+id/workerwage"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/workernum"
+                    app:layout_constraintBottom_toBottomOf="@id/workernum"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@id/workerdays"
                     android:layout_marginStart="5dp">
@@ -234,45 +272,54 @@
                         android:inputType="number"/>
                 </com.google.android.material.textfield.TextInputLayout>
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/darkRed"
+                    android:id="@+id/worker_total"
+                    android:layout_marginTop="2dp"
+                    android:textSize="16sp"
+                    app:layout_constraintTop_toBottomOf="@id/workernum"
+                    app:layout_constraintStart_toStartOf="@id/workernum"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/darkRed"
-                android:id="@+id/worker_total"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="2dp"
-                android:textSize="16sp"/>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@android:color/black"
-                android:text="Previous machinery cost details"
-                android:layout_marginTop="16dp"
-                android:layout_marginStart="16dp"/>
+
+
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:id="@+id/machinery_survey"
+                android:visibility="gone"
                 android:orientation="horizontal"
                 android:gravity="center_vertical"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="16dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@android:color/black"
+                    android:id="@+id/machinery_details_textview"
+                    android:text="Previous machinery cost details"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    />
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:hint="Cost per acre"
                     android:id="@+id/cost_acre"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/machinery_details_textview"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    android:layout_marginEnd="5dp">
+                    android:layout_marginEnd="5dp"
+                    android:layout_marginTop="5dp">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:layout_width="match_parent"
@@ -280,16 +327,20 @@
                         android:inputType="number"/>
                 </com.google.android.material.textfield.TextInputLayout>
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/darkRed"
+                    android:id="@+id/machine_total"
+                    android:layout_marginTop="2dp"
+                    android:textSize="16sp"
+                    app:layout_constraintTop_toBottomOf="@id/cost_acre"
+                    app:layout_constraintStart_toStartOf="@id/cost_acre"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
+
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/darkRed"
-                android:id="@+id/machine_total"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="2dp"
-                android:textSize="16sp"/>
+
 
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
@@ -305,33 +356,38 @@
                     android:layout_height="wrap_content"/>
             </com.google.android.material.textfield.TextInputLayout>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@android:color/black"
-                android:text="Previous fertilizer details"
-                android:layout_marginTop="16dp"
-                android:layout_marginStart="16dp"/>
+
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:id="@+id/fert_survey"
+                android:visibility="gone"
                 android:orientation="horizontal"
                 android:gravity="center_vertical"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="16dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@android:color/black"
+                    android:id="@+id/fert_details_textview"
+                    android:text="Previous fertilizer details"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"/>
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:hint="Number of packets"
                     android:id="@+id/fertnum"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/fert_details_textview"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toStartOf="@id/fertprice"
-                    android:layout_marginEnd="5dp">
+                    android:layout_marginEnd="5dp"
+                    android:layout_marginTop="5dp">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:layout_width="match_parent"
@@ -344,8 +400,8 @@
                     android:layout_height="wrap_content"
                     android:hint="Price per packet"
                     android:id="@+id/fertprice"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/fertnum"
+                    app:layout_constraintBottom_toBottomOf="@id/fertnum"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@id/fertnum"
                     android:layout_marginStart="5dp">
@@ -356,17 +412,20 @@
                         android:inputType="number"/>
                 </com.google.android.material.textfield.TextInputLayout>
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/darkRed"
+                    android:id="@+id/fertilizer_total"
+                    android:layout_marginTop="2dp"
+                    android:textSize="16sp"
+                    app:layout_constraintTop_toBottomOf="@id/fertnum"
+                    app:layout_constraintStart_toStartOf="@id/fertnum"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/darkRed"
-                android:id="@+id/fertilizer_total"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="2dp"
-                android:textSize="16sp"/>
+
 
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
@@ -382,33 +441,37 @@
                     android:layout_height="wrap_content"/>
             </com.google.android.material.textfield.TextInputLayout>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@android:color/black"
-                android:text="Previous pesticide details"
-                android:layout_marginTop="16dp"
-                android:layout_marginStart="16dp"/>
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:id="@+id/pest_survey"
+                android:visibility="gone"
                 android:orientation="horizontal"
                 android:gravity="center_vertical"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="16dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@android:color/black"
+                    android:id="@+id/pest_details_textview"
+                    android:text="Previous pesticide details"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"/>
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:hint="Number of packets"
                     android:id="@+id/pestnum"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/pest_details_textview"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toStartOf="@id/pestprice"
-                    android:layout_marginEnd="5dp">
+                    android:layout_marginEnd="5dp"
+                    android:layout_marginTop="5dp">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:layout_width="match_parent"
@@ -421,8 +484,8 @@
                     android:layout_height="wrap_content"
                     android:hint="Price per packet"
                     android:id="@+id/pestprice"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/pestnum"
+                    app:layout_constraintBottom_toBottomOf="@id/pestnum"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@id/pestnum"
                     android:layout_marginStart="5dp">
@@ -433,18 +496,20 @@
                         android:inputType="number"/>
                 </com.google.android.material.textfield.TextInputLayout>
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/darkRed"
+                    android:id="@+id/pesticide_total"
+                    android:layout_marginTop="2dp"
+                    android:textSize="16sp"
+                    app:layout_constraintTop_toBottomOf="@id/pestnum"
+                    app:layout_constraintStart_toStartOf="@id/pestnum"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    />
 
 
             </androidx.constraintlayout.widget.ConstraintLayout>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/darkRed"
-                android:id="@+id/pesticide_total"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="2dp"
-                android:textSize="16sp"/>
 
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"

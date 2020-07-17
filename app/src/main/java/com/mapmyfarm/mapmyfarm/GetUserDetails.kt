@@ -36,6 +36,10 @@ class GetUserDetails : AppCompatActivity() {
         title = "User Details"
         setContentView(R.layout.activity_get_user_details)
 
+        supportActionBar?.setDisplayShowHomeEnabled(true)
+        supportActionBar?.setLogo(R.drawable.actionbar_logo)
+        supportActionBar?.setDisplayUseLogoEnabled(true)
+
         firstName = findViewById(R.id.first_name_input)
         lastName = findViewById(R.id.last_name_input)
         locale = findViewById(R.id.locale_input)
@@ -101,7 +105,7 @@ class GetUserDetails : AppCompatActivity() {
         emailString = email.editText?.text.toString()
         if(emailString.isNotEmpty() &&
                 !android.util.Patterns.EMAIL_ADDRESS.matcher(emailString).matches()){
-            email.error = "Email is not valid"
+            email.error = getString(R.string.email_not_valid)
             allOkay = false
         } else {
             email.error = null
@@ -145,12 +149,13 @@ class GetUserDetails : AppCompatActivity() {
         localeString , districtString , stateString , emailString)
         //go to the next page
         val myIntent = Intent(this, Dashboard::class.java)
+        myIntent.putExtra("LOAD_FROM_SERVER", true)
         startActivity(myIntent)
         finish()
     }
 
     private fun errorUpdate() {
-        Toast.makeText(applicationContext, "Error saving details", Toast.LENGTH_LONG).show()
+        Toast.makeText(applicationContext, getString(R.string.err_saving_details), Toast.LENGTH_LONG).show()
         loadingDots.visibility = View.GONE
         saveButton.text = getString(R.string.save)
     }

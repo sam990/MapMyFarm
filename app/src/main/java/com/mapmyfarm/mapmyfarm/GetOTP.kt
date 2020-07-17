@@ -57,7 +57,6 @@ class GetOTP : AppCompatActivity() {
             //hide keyboard
             val imm = getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
             imm.hideSoftInputFromWindow(otpView.windowToken, 0)
-//            Toast.makeText(applicationContext, otpView.text.toString(), Toast.LENGTH_LONG).show()
             verifyOTP(otpView.text.toString())
         }
         receiver = SMSBroadcastReceiver()
@@ -109,6 +108,7 @@ class GetOTP : AppCompatActivity() {
         resendButton.isEnabled = false
         //get the time
         val time = if(resendCounter < 3) intervals[resendCounter] else intervals[2]
+        secondsView.visibility = View.VISIBLE
 
         object: CountDownTimer(time , 1000) {
             override fun onFinish() {
@@ -118,7 +118,7 @@ class GetOTP : AppCompatActivity() {
             }
 
             override fun onTick(millisUntilFinished: Long) {
-                secondsView.text = "(" + millisUntilFinished / 1000 + ")"
+                secondsView.text = "(${millisUntilFinished / 1000})"
             }
 
         }.start()
@@ -157,17 +157,23 @@ class GetOTP : AppCompatActivity() {
                 println(result?.signInState.toString())
                 when(result?.signInState){
                     SignInState.CUSTOM_CHALLENGE -> {
-                        resendOTPSuccessful()
+                        runOnUiThread {
+                            resendOTPSuccessful()
+                        }
                     }
                     else -> {
-                        resendOTPError()
+                        runOnUiThread {
+                            resendOTPError()
+                        }
                     }
                 }
             }
 
             override fun onError(e: java.lang.Exception?) {
                 e?.printStackTrace()
-                resendOTPError()
+                runOnUiThread {
+                    resendOTPError()
+                }
             }
 
         })

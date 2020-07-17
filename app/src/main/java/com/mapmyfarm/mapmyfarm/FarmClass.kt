@@ -1,18 +1,22 @@
 package com.mapmyfarm.mapmyfarm
 
 import androidx.recyclerview.widget.DiffUtil
+import androidx.room.Entity
+import androidx.room.Ignore
+import androidx.room.PrimaryKey
 import com.google.android.gms.maps.model.LatLng
 import java.util.*
 import kotlin.collections.ArrayList
 
+@Entity
 data class FarmClass(
-    val id: String,
+    @PrimaryKey val id: String,
     val area: Double?,
     val farmID: String?,
     val sowingDate: Date,
-    val latList: ArrayList<Double>?,
-    val lngList: ArrayList<Double>?,
+    var coordinates : ArrayList<LatLng>,
     val crop: String?,
+    val seedBrand: String?,
     val plantingMode: String?,
     val weedingMode: String?,
     val harvestCuttingMode: String?,
@@ -33,7 +37,6 @@ data class FarmClass(
     val comment: String?
 )  {
 
-    val coordinates : ArrayList<LatLng>
 
     companion object {
         val DIFF_CALLBACK = object : DiffUtil.ItemCallback<FarmClass>(){
@@ -48,13 +51,6 @@ data class FarmClass(
         }
     }
 
-    init {
-        val count: Int = latList?.size ?: 0
-        coordinates = ArrayList()
-        for (i in 0 until count) {
-            coordinates.add(LatLng(latList!![i], lngList!![i]))
-        }
-    }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -91,6 +87,5 @@ data class FarmClass(
         result = 31 * result + landType.hashCode()
         return result
     }
-
 
 }

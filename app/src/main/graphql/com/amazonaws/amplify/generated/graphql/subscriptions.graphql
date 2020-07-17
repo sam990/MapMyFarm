@@ -20,6 +20,7 @@ subscription OnCreateFarmDetails(
     coordinatesLat
     coordinatesLon
     crop
+    seed_brand
     sowing_date
     planting_mode
     weeding_mode
@@ -62,6 +63,7 @@ subscription OnUpdateFarmDetails(
     coordinatesLat
     coordinatesLon
     crop
+    seed_brand
     sowing_date
     planting_mode
     weeding_mode
@@ -104,6 +106,7 @@ subscription OnDeleteFarmDetails(
     coordinatesLat
     coordinatesLon
     crop
+    seed_brand
     sowing_date
     planting_mode
     weeding_mode

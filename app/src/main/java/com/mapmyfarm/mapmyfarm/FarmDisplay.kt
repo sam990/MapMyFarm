@@ -17,14 +17,14 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 
 
+
 class FarmDisplay : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLoadedCallback {
 
     private lateinit var mMap: GoogleMap
     private val POLYGON_PADDING= 200
     lateinit var farm: FarmClass
-    var index: Int = -1;
-    lateinit var editButton: FloatingActionButton
-    lateinit var viewDismissButton: FloatingActionButton
+    var index: Int = -1
+
     lateinit var deleteButton: FloatingActionButton
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -67,17 +67,10 @@ class FarmDisplay : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLoad
     }
 
     private fun initialiseButtons() {
-        editButton = findViewById(R.id.edit_tag)
-        editButton.setOnClickListener{
-            val myIntent = Intent(FarmDisplay@this, FarmEdit::class.java )
-            myIntent.putExtra("DATA_INDEX", index)
-            startActivity(myIntent)
-            finish()
-        }
         deleteButton = findViewById(R.id.delete_area)
         deleteButton.setOnClickListener {
             Snackbar.make(
-                findViewById(R.id.edit_tag),
+                findViewById(R.id.delete_area),
                 "Confirm delete", Snackbar.LENGTH_LONG
             )
                 .setAction("Delete" ){
@@ -85,22 +78,19 @@ class FarmDisplay : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLoad
                 }
                 .show()
         }
-        viewDismissButton = findViewById(R.id.view_dismiss)
-        viewDismissButton.setOnClickListener{
-            finish()
-        }
     }
 
     private fun deleteOperation() {
         val callback: DataStoreOperationCallback =
             object : DataStoreOperationCallback {
                 override fun onSuccess() {
+                    setResult(FarmEdit.DELETED)
                     finish()
                 }
 
                 override fun onError() {
                     Snackbar.make(
-                        findViewById(R.id.edit_tag),
+                        findViewById(R.id.delete_area),
                         "Unable to delete. Try Later", Snackbar.LENGTH_LONG
                     )
                         .show()

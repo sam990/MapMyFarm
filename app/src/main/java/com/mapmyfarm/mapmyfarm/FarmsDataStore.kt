@@ -1,6 +1,9 @@
 package com.mapmyfarm.mapmyfarm
 
 
+import android.content.Context
+import androidx.room.Room
+import androidx.room.RoomDatabase
 import com.amazonaws.amplify.generated.graphql.CreateFarmDetailsMutation
 import com.amazonaws.amplify.generated.graphql.DeleteFarmDetailsMutation
 import com.amazonaws.amplify.generated.graphql.ListFarmDetailsQuery
@@ -15,10 +18,12 @@ import com.mapmyfarm.mapmyfarm.AppSyncClientFactory.appSyncClient
 import type.CreateFarmDetailsInput
 import type.DeleteFarmDetailsInput
 import type.UpdateFarmDetailsInput
+import java.lang.Exception
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.annotation.Nonnull
 import kotlin.collections.ArrayList
+import kotlin.concurrent.thread
 
 interface DataStoreOperationCallback{
     fun onSuccess()
@@ -28,11 +33,32 @@ interface DataStoreOperationCallback{
 
 object FarmsDataStore {
 
-    var farmsList: MutableList<FarmClass> = ArrayList()
+    @Volatile var farmsList: MutableList<FarmClass> = ArrayList()
 
     private val sdf = SimpleDateFormat("yyyy-MM-ddZZZZZ", Locale.ENGLISH)
 //    private const val TAG = "FarmsDataStore"
 
+    lateinit var db : FarmDatabase
+
+    fun initialiseRoomDB(context: Context) {
+        db = Room.databaseBuilder(context.applicationContext, FarmDatabase::class.java, "Farms.db")
+            .fallbackToDestructiveMigration()
+            .build()
+    }
+
+    @Synchronized fun refreshRoomDB(callback: DataStoreOperationCallback) {
+        thread {
+            farmsList = ArrayList(db.farmDao().getAll())
+            callback.onSuccess()
+        }
+    }
+
+    fun clearDB(callback: DataStoreOperationCallback) {
+        thread {
+            db.clearAllTables()
+            callback.onSuccess()
+        }
+    }
 
     fun fetchItems(callback: DataStoreOperationCallback) {
 
@@ -40,7 +66,7 @@ object FarmsDataStore {
             .responseFetcher(AppSyncResponseFetchers.CACHE_AND_NETWORK)
             .enqueue(object : GraphQLCall.Callback<ListFarmDetailsQuery.Data?>() {
 
-                override fun onResponse(@Nonnull response: Response<ListFarmDetailsQuery.Data?>) {
+                @Synchronized override fun onResponse(@Nonnull response: Response<ListFarmDetailsQuery.Data?>) {
                     val items: MutableList<ListFarmDetailsQuery.Item>? = response.data()?.listFarmDetails()?.items()
                     farmsList.clear()
                     if (items != null) {
@@ -50,6 +76,7 @@ object FarmsDataStore {
                             )
                         }
                     }
+                    db.farmDao().insertAll(farmsList)
                     callback.onSuccess()
                 }
 
@@ -66,6 +93,7 @@ object FarmsDataStore {
         sowingDate: Date,
         points: ArrayList<LatLng>?,
         crop: String,
+        seedBrand: String?,
         plantingMode: String?,
         weedingMode: String?,
         harvestCuttingMode: String?,
@@ -92,7 +120,7 @@ object FarmsDataStore {
             object : GraphQLCall.Callback<CreateFarmDetailsMutation.Data>() {
 
                 override fun onResponse(@Nonnull response: Response<CreateFarmDetailsMutation.Data>) {
-                    userCallback.onSuccess()
+                    fetchItems(userCallback)
                 }
 
                 override fun onFailure(@Nonnull e: ApolloException) {
@@ -105,6 +133,7 @@ object FarmsDataStore {
                     CreateFarmDetailsInput.builder()
                         .area(area ?: 0.0)
                         .crop(crop)
+                        .seed_brand(seedBrand)
                         .farm_id(farmID)
                         .sowing_date(sdf.format(sowingDate))
                         .planting_mode(plantingMode)
@@ -138,7 +167,9 @@ object FarmsDataStore {
         val callback: GraphQLCall.Callback<DeleteFarmDetailsMutation.Data> =
             object : GraphQLCall.Callback<DeleteFarmDetailsMutation.Data>() {
                 override fun onResponse(@Nonnull response: Response<DeleteFarmDetailsMutation.Data>) {
-                    userCallback.onSuccess()
+
+                    db.farmDao().deleteByID(id)
+                    refreshRoomDB(userCallback)
                 }
 
                 override fun onFailure(@Nonnull e: ApolloException) {
@@ -157,6 +188,7 @@ object FarmsDataStore {
         farmID: String?,
         sowingDate: Date?,
         crop: String?,
+        seedBrand: String?,
         plantingMode: String?,
         weedingMode: String?,
         harvestCuttingMode: String?,
@@ -180,7 +212,7 @@ object FarmsDataStore {
         val callback: GraphQLCall.Callback<UpdateFarmDetailsMutation.Data> =
             object : GraphQLCall.Callback<UpdateFarmDetailsMutation.Data>() {
                 override fun onResponse(@Nonnull response: Response<UpdateFarmDetailsMutation.Data>) {
-                    userCallback.onSuccess()
+                    fetchItems(userCallback)
                 }
 
                 override fun onFailure(@Nonnull e: ApolloException) {
@@ -197,6 +229,9 @@ object FarmsDataStore {
         }
         if(crop != null) {
             builder.crop(crop)
+        }
+        if(seedBrand != null) {
+            builder.seed_brand(seedBrand)
         }
         if(plantingMode != null) {
             builder.planting_mode(plantingMode)
@@ -261,14 +296,15 @@ object FarmsDataStore {
     }
 
     fun parseFarm(item: ListFarmDetailsQuery.Item): FarmClass {
+        val coors = doubleToLatLngList(item.coordinatesLat(), item.coordinatesLon())
         return FarmClass(
             item.id(),
             item.area(),
             item.farm_id(),
-            sdf.parse(item.sowing_date()),
-            ArrayList(item.coordinatesLat()),
-            ArrayList(item.coordinatesLon()),
+            sdf.parse(item.sowing_date()) ?: Date(),
+            coors,
             item.crop(),
+            item.seed_brand(),
             item.planting_mode(),
             item.weeding_mode(),
             item.harvest_cutting_mode(),
@@ -302,5 +338,14 @@ object FarmsDataStore {
             lng.add(latLng.longitude)
         }
         return Pair(lat, lng)
+    }
+
+    fun doubleToLatLngList(latList: List<Double>?, lngList: List<Double>?): ArrayList<LatLng> {
+        val count: Int = latList?.size ?: 0
+        val coordinates = ArrayList<LatLng>()
+        for (i in 0 until count) {
+            coordinates.add(LatLng(latList!![i], lngList!![i]))
+        }
+        return coordinates
     }
 }

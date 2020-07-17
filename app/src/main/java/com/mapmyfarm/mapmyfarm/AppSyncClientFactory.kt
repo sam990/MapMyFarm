@@ -14,21 +14,19 @@ object AppSyncClientFactory {
 
     @Synchronized
     fun init(context: Context?) {
-        if (client == null) {
-            val awsConfiguration = AWSConfiguration(context)
-            client = AWSAppSyncClient.builder()
-                .context(context)
-                .awsConfiguration(awsConfiguration)
-                .cognitoUserPoolsAuthProvider(CognitoUserPoolsAuthProvider {
-                    try {
-                        return@CognitoUserPoolsAuthProvider AWSMobileClient.getInstance().tokens.idToken
-                            .tokenString
-                    } catch (e: Exception) {
-                        Log.e("APPSYNC_ERROR", e.localizedMessage)
-                        return@CognitoUserPoolsAuthProvider e.localizedMessage
-                    }
-                }).build()
-        }
+        val awsConfiguration = AWSConfiguration(context)
+        client = AWSAppSyncClient.builder()
+            .context(context)
+            .awsConfiguration(awsConfiguration)
+            .cognitoUserPoolsAuthProvider(CognitoUserPoolsAuthProvider {
+                try {
+                    return@CognitoUserPoolsAuthProvider AWSMobileClient.getInstance().tokens.idToken
+                        .tokenString
+                } catch (e: Exception) {
+                    Log.e("APPSYNC_ERROR", e.localizedMessage)
+                    return@CognitoUserPoolsAuthProvider e.localizedMessage
+                }
+            }).build()
     }
 
     @Synchronized

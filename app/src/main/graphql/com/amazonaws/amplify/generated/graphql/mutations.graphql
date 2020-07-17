@@ -8,6 +8,7 @@ mutation CreateFarmDetails($input: CreateFarmDetailsInput!) {
     coordinatesLat
     coordinatesLon
     crop
+    seed_brand
     sowing_date
     planting_mode
     weeding_mode
@@ -38,6 +39,7 @@ mutation UpdateFarmDetails($input: UpdateFarmDetailsInput!) {
     coordinatesLat
     coordinatesLon
     crop
+    seed_brand
     sowing_date
     planting_mode
     weeding_mode
@@ -68,6 +70,7 @@ mutation DeleteFarmDetails($input: DeleteFarmDetailsInput!) {
     coordinatesLat
     coordinatesLon
     crop
+    seed_brand
     sowing_date
     planting_mode
     weeding_mode

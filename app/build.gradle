@@ -26,11 +26,17 @@ android {
     }
     kotlinOptions {
         jvmTarget = "1.8"
+        languageVersion = "1.4"
     }
     buildToolsVersion = '28.0.3'
+
+    packagingOptions {
+        exclude 'META-INF/atomicfu.kotlin_module'
+    }
 }
 
 apply plugin: 'com.amazonaws.appsync'
+apply plugin: 'kotlin-kapt'
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
@@ -70,7 +76,15 @@ dependencies {
     implementation "androidx.recyclerview:recyclerview-selection:1.1.0-rc01"
     implementation "androidx.cardview:cardview:1.0.0"
 
-    def acraVersion = '5.5.1'
+
     implementation "ch.acra:acra-mail:$acraVersion"
+
+    implementation "androidx.room:room-runtime:$room_version"
+
+    kapt "androidx.room:room-compiler:$room_version" // For Kotlin use kapt instead of annotationProcessor
+
+    // optional - Kotlin Extensions and Coroutines support for Room
+    implementation "androidx.room:room-ktx:$room_version"
+
 
 }

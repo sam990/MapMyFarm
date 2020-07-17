@@ -1,21 +1,34 @@
 package com.mapmyfarm.mapmyfarm
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import com.mapmyfarm.mapmyfarm.FarmsDataStore.updateFarm
 import java.text.SimpleDateFormat
 import java.util.*
 
+
+
 class FarmEdit : FarmInput() {
+
+    companion object{
+        const val DELETED = 6727
+    }
+
+    private val DisplayFarmReturnCode = 888762
 
     lateinit var farm: FarmClass
     val sdf = SimpleDateFormat("yyyy/MM/dd")
+    var index = -1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         println("hello")
-        val index = intent.getIntExtra("DATA_INDEX", -1)
+        index = intent.getIntExtra("DATA_INDEX", -1)
         if(index >= 0){
             farm = FarmsDataStore.farmsList[index]
         } else {
@@ -25,8 +38,24 @@ class FarmEdit : FarmInput() {
         loadDataInViews()
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.farmedit_menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.order == 100){
+            val myIntent = Intent(this, FarmDisplay::class.java).apply {
+                putExtra("DATA_INDEX", index)
+            }
+            startActivityForResult(myIntent, DisplayFarmReturnCode )
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
     private fun loadDataInViews() {
         cropInput.editText?.setText(farm.crop)
+        seedBrandInput.editText?.setText(farm.seedBrand)
         seedNumInput.editText?.setText(farm.prevSeedPieces?.toString())
         seedPriceInput.editText?.setText(farm.prevSeedPrice?.toString())
         sowDateInput.editText?.setText(sdf.format(farm.sowingDate))
@@ -66,6 +95,7 @@ class FarmEdit : FarmInput() {
             null,
             date,
             cropInput.editText?.text.toString(),
+            seedBrandInput.editText?.text.toString(),
             plantingInput.editText?.text.toString(),
             weedingInput.editText?.text.toString(),
             hcmInput.editText?.text.toString(),
@@ -86,5 +116,17 @@ class FarmEdit : FarmInput() {
             commentsInput.editText?.text.toString(),
             callback
         )
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        when(requestCode) {
+            DisplayFarmReturnCode -> {
+                when(resultCode) {
+                    DELETED -> finish()
+                }
+            }
+        }
+
+        super.onActivityResult(requestCode, resultCode, data)
     }
 }

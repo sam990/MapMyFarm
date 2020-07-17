@@ -3,19 +3,16 @@ package com.mapmyfarm.mapmyfarm
 
 import android.Manifest
 import android.app.AlertDialog
-import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.AlertDialogLayout
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DefaultItemAnimator
@@ -38,6 +35,7 @@ class Dashboard : AppCompatActivity(), OnFarmCardClickListener {
     lateinit var emptyView: TextView
     var locationPermissionEnabled = false
     lateinit var aboutDialog: AlertDialog
+    var fetchFromNetwok = false
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -67,7 +65,9 @@ class Dashboard : AppCompatActivity(), OnFarmCardClickListener {
             }
         })
 
+
         AppSyncClientFactory.init(this)
+
         checkLocationPermission()
 
         findViewById<MaterialButton>(R.id.add_farm_button).setOnClickListener {
@@ -75,7 +75,7 @@ class Dashboard : AppCompatActivity(), OnFarmCardClickListener {
         }
 
         findViewById<MaterialButton>(R.id.dashboard_contact).setOnClickListener {
-            val callIntent = Intent(Intent.ACTION_DIAL, Uri.parse("tel:+918374474447"))
+            val callIntent = Intent(Intent.ACTION_DIAL, Uri.parse(getString(R.string.mapmyfarm_contact)))
             startActivity(callIntent)
         }
 
@@ -84,6 +84,8 @@ class Dashboard : AppCompatActivity(), OnFarmCardClickListener {
         findViewById<MaterialButton>(R.id.dashboard_about).setOnClickListener {
             showAbout()
         }
+        fetchFromNetwok = intent.getBooleanExtra("LOAD_FROM_SERVER", false)
+        FarmsDataStore.initialiseRoomDB(this)
         startFetchingList()
     }
 
@@ -95,6 +97,12 @@ class Dashboard : AppCompatActivity(), OnFarmCardClickListener {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.order == 100){
             logoutUser()
+            return true
+        }
+        else if (item.order == 101) {
+            fetchFromNetwok = true
+            startFetchingList()
+            return true
         }
         return super.onOptionsItemSelected(item)
     }
@@ -105,7 +113,7 @@ class Dashboard : AppCompatActivity(), OnFarmCardClickListener {
             builder.apply {
                 setTitle(R.string.about)
                 setMessage(R.string.about_content)
-                setPositiveButton(R.string.ok) { dialog, id ->
+                setPositiveButton(R.string.ok) { dialog, _ ->
                     dialog.dismiss()
                 }
             }
@@ -113,25 +121,26 @@ class Dashboard : AppCompatActivity(), OnFarmCardClickListener {
         }
     }
 
-    fun showAbout() {
+    private fun showAbout() {
         aboutDialog.show()
     }
 
 
 
-    fun startFetchingList() {
+    private fun startFetchingList() {
         accessToFetch = true
         val callback =
             object : DataStoreOperationCallback {
                 override fun onSuccess() {
                     //populate
                    runOnUiThread {
+                        fetchFromNetwok = false
                         loadingDots.stopAnimation()
                         loadingDots.visibility = View.GONE
                         recyclerView.visibility = View.VISIBLE
                     }
 
-                    if (FarmsDataStore.farmsList.size === 0) {
+                    if (FarmsDataStore.farmsList.size == 0) {
                         runOnUiThread {
                             emptyView.setText(R.string.empty_message)
                             emptyView.visibility = View.VISIBLE
@@ -139,7 +148,6 @@ class Dashboard : AppCompatActivity(), OnFarmCardClickListener {
                     } else if (emptyView.visibility == View.VISIBLE) {
                         runOnUiThread { emptyView.visibility = View.GONE }
                     }
-//                    Log.d(TAG, "SAM990 yeah hom many items: " + FarmsDataStore.farmsList.size)
                     val newList: List<FarmClass> = ArrayList(FarmsDataStore.farmsList)
                     farmAdapter.submitList(newList)
                 }
@@ -148,11 +156,15 @@ class Dashboard : AppCompatActivity(), OnFarmCardClickListener {
                     Toast.makeText(applicationContext, "Unable to get data", Toast.LENGTH_LONG).show()
                 }
             }
-        FarmsDataStore.fetchItems(callback)
+        if(fetchFromNetwok){
+            FarmsDataStore.fetchItems(callback)
+        } else {
+            FarmsDataStore.refreshRoomDB(callback)
+        }
     }
 
     override fun onCardClick(position: Int) {
-        val myIntent = Intent(this, FarmDisplay::class.java)
+        val myIntent = Intent(this, FarmEdit::class.java)
         myIntent.putExtra("DATA_INDEX", position)
         startActivity(myIntent)
     }
@@ -189,7 +201,6 @@ class Dashboard : AppCompatActivity(), OnFarmCardClickListener {
         grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-//        Log.d(TAG, "SAM990 Doraemon was here")
         if (requestCode != LOCATION_PERMISSION_REQUEST_CODE) {
             return
         }
@@ -199,7 +210,6 @@ class Dashboard : AppCompatActivity(), OnFarmCardClickListener {
         ) {
             // Enable the my location layer if the permission has been granted.
             true
-    //            Log.d(TAG, "SAM990 Nobita wants a gadget")
         } else {
             // Permission was denied.
             Toast.makeText(applicationContext,
@@ -216,11 +226,27 @@ class Dashboard : AppCompatActivity(), OnFarmCardClickListener {
     }
 
     private fun logoutUser() {
-        AWSMobileClient.getInstance().signOut()
-        //go to the login page
-        val myIntent = Intent(this, SignIn::class.java)
-        startActivity(myIntent)
-        finish()
+        FarmsDataStore.clearDB(object: DataStoreOperationCallback{
+            override fun onSuccess() {
+                runOnUiThread {
+                    AWSMobileClient.getInstance().signOut()
+                    //go to the login page
+                    val myIntent = Intent(this@Dashboard, SignIn::class.java)
+                    startActivity(myIntent)
+                    finish()
+                }
+            }
+
+            override fun onError() {
+                runOnUiThread {
+                    Toast.makeText(applicationContext,
+                        "Error Logout",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+            }
+
+        })
     }
 
     private fun getUserDetails() {

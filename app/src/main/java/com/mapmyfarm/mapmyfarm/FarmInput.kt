@@ -4,10 +4,8 @@ import android.app.DatePickerDialog
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
-import android.widget.DatePicker
-import android.widget.EditText
-import android.widget.TextView
-import android.widget.Toast
+import android.view.ViewGroup
+import android.widget.*
 import androidx.core.widget.addTextChangedListener
 import com.eyalbira.loadingdots.LoadingDots
 import com.google.android.gms.maps.model.LatLng
@@ -34,6 +32,7 @@ open class FarmInput : AppCompatActivity() {
     lateinit var pestTotal: TextView
 
     lateinit var cropInput: TextInputLayout
+    lateinit var seedBrandInput: TextInputLayout
     lateinit var seedNumInput: TextInputLayout
     lateinit var seedPriceInput: TextInputLayout
     lateinit var sowDateInput: TextInputLayout
@@ -52,6 +51,15 @@ open class FarmInput : AppCompatActivity() {
     lateinit var pestPriceInput: TextInputLayout
     lateinit var landTypeInput: TextInputLayout
     lateinit var commentsInput: TextInputLayout
+
+
+    lateinit var seedSurvey: ViewGroup
+    lateinit var labourSurvey: ViewGroup
+    lateinit var machineSurvey: ViewGroup
+    lateinit var fertSurvey: ViewGroup
+    lateinit var pestSurvey: ViewGroup
+
+    lateinit var surveySwitch: Switch
 
 
     val totalPrices = IntArray(5)
@@ -90,10 +98,20 @@ open class FarmInput : AppCompatActivity() {
         cancelButton.setOnClickListener {
             finish()
         }
+
+        surveySwitch = findViewById(R.id.details_switch)
+        surveySwitch.setOnCheckedChangeListener { _ , isChecked ->
+            if(isChecked) {
+                showSurvey()
+            } else {
+                hideSurvey()
+            }
+        }
     }
 
     private fun initialiseInputs() {
         cropInput = findViewById(R.id.crop_input)
+        seedBrandInput = findViewById(R.id.seed_brand_input)
         seedNumInput = findViewById(R.id.seednum)
         seedPriceInput = findViewById(R.id.seedprice)
 
@@ -122,6 +140,12 @@ open class FarmInput : AppCompatActivity() {
         landTypeInput = findViewById(R.id.land_type_input)
 
         commentsInput = findViewById(R.id.comments_input)
+
+        seedSurvey = findViewById(R.id.seed_survey)
+        labourSurvey = findViewById(R.id.labour_survey)
+        machineSurvey = findViewById(R.id.machinery_survey)
+        fertSurvey = findViewById(R.id.fert_survey)
+        pestSurvey = findViewById(R.id.pest_survey)
     }
 
     private fun initialiseTextViews() {
@@ -255,6 +279,26 @@ open class FarmInput : AppCompatActivity() {
         return allOkay
     }
 
+    fun showSurvey() {
+        seedSurvey.post {
+            seedSurvey.visibility = View.VISIBLE
+            labourSurvey.visibility = View.VISIBLE
+            machineSurvey.visibility = View.VISIBLE
+            fertSurvey.visibility = View.VISIBLE
+            pestSurvey.visibility = View.VISIBLE
+        }
+    }
+
+    fun hideSurvey() {
+        seedSurvey.post {
+            seedSurvey.visibility = View.GONE
+            labourSurvey.visibility = View.GONE
+            machineSurvey.visibility = View.GONE
+            fertSurvey.visibility = View.GONE
+            pestSurvey.visibility = View.GONE
+        }
+    }
+
     protected open fun performOperation() {
         val sdf = SimpleDateFormat("yyyy/MM/dd")
         val date = sdf.parse(sowDateInput.editText?.text.toString())
@@ -279,6 +323,7 @@ open class FarmInput : AppCompatActivity() {
             date ?: Date(),
             pointsList,
             cropInput.editText?.text.toString(),
+            seedBrandInput.editText?.text.toString(),
             plantingInput.editText?.text.toString(),
             weedingInput.editText?.text.toString(),
             hcmInput.editText?.text.toString(),

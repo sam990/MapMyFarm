@@ -16,6 +16,8 @@ class SplashScreenActivity : AppCompatActivity() {
 //        val appSignatureHelper = AppSignatureHelper(applicationContext)
 //        appSignatureHelper.appSignatures;
 
+
+
         val callback = object : Callback<UserStateDetails>{
             override fun onResult(result: UserStateDetails?) {
                 when (result?.userState) {
@@ -24,6 +26,9 @@ class SplashScreenActivity : AppCompatActivity() {
                         finish()
                     }
                     UserState.SIGNED_OUT-> {
+//                        val myIntent = Intent(this@SplashScreenActivity , GetUserDetails::class.java)
+//                        startActivity(myIntent)
+//                        finish()
                         val intent = Intent(this@SplashScreenActivity, SignIn::class.java)
                         startActivity(intent)
                         finish()

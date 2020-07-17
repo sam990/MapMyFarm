@@ -5,7 +5,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
-import android.widget.TextView
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import com.amazonaws.mobile.client.AWSMobileClient
 import com.amazonaws.mobile.client.Callback
@@ -22,8 +22,6 @@ import kotlin.collections.HashMap
 
 class SignIn : AppCompatActivity() {
 
-    lateinit var logoView : View
-    lateinit var logoViewText : TextView
     lateinit var phoneInput : MyPhoneInputLayout
     lateinit var phoneConfirm : MaterialButton
     lateinit var loadingDots: LoadingDots
@@ -39,8 +37,6 @@ class SignIn : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sign_in)
-        logoView = findViewById(R.id.signup_logo_view)
-        logoViewText = findViewById(R.id.signup_logo_text)
         phoneInput = findViewById(R.id.phone_input)
         phoneInput.setDefaultCountry("IN")
         phoneConfirm = findViewById(R.id.phone_confirm)
@@ -53,28 +49,25 @@ class SignIn : AppCompatActivity() {
 
                 override fun onValid() {
                     phoneConfirm.isEnabled = true
+                    val imm = getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+                    imm.hideSoftInputFromWindow(phoneInput.windowToken, 0)
                 }
 
             })
         }
         phoneConfirm.setOnClickListener {
             setButtonToLoading()
-//            Toast.makeText(applicationContext, phoneInput.phoneNumber,Toast.LENGTH_LONG).show()
             makeSignInRequest()
         }
-//        verifyOTP() //for testing
-        //testing
-//        val myIntent = Intent(this, GetUserDetails::class.java)
-//        startActivity(myIntent)
     }
 
-    fun setButtonToLoading(){
+    private fun setButtonToLoading(){
         phoneConfirm.text = ""
         phoneConfirm.isEnabled = false
         loadingDots.visibility = View.VISIBLE
     }
 
-    fun setButtonToNormal(){
+    private fun setButtonToNormal(){
         loadingDots.visibility = View.GONE
         phoneConfirm.isEnabled = true
         phoneConfirm.text = getString(R.string.confirm)
@@ -99,10 +92,10 @@ class SignIn : AppCompatActivity() {
 
             override fun onError(e: Exception?) {
                 when(e){
-                    is UserNotFoundException -> SignUp()
+                    is UserNotFoundException -> signUp()
                     is UserLambdaValidationException -> {
                         if (e.errorMessage == notExistError){
-                            SignUp()
+                            signUp()
                         }
                         else {
                             //some other error
@@ -120,7 +113,7 @@ class SignIn : AppCompatActivity() {
 
     }
 
-    fun SignUp(){
+    private fun signUp(){
         val attr = HashMap<String, String>()
         attr["custom:detailsEntered"] = "0"
         val awsClient = AWSMobileClient.getInstance()
@@ -147,14 +140,12 @@ class SignIn : AppCompatActivity() {
 
     fun verifyOTP(){
         //set button to normal
-
-
         runOnUiThread{
             setButtonToNormal()
         }
-        val myintent = Intent(this, GetOTP::class.java)
-        myintent.putExtra(PHONE, phoneInput.phoneNumber)
-        startActivityForResult(myintent, OTPRequestCode)
+        val myIntent = Intent(this, GetOTP::class.java)
+        myIntent.putExtra(PHONE, phoneInput.phoneNumber)
+        startActivityForResult(myIntent, OTPRequestCode)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
