@@ -1,12 +1,18 @@
 # this is an auto generated file. This will be overwritten
-mutation CreateFarmDetails($input: CreateFarmDetailsInput!) {
-  createFarmDetails(input: $input) {
+mutation CreateFarm($input: FarmInput!) {
+  createFarm(input: $input) {
     id
-    usermobile
+    farmID
     area
     locale
     coordinatesLat
-    coordinatesLon
+    coordinatesLng
+    land_type
+  }
+}
+mutation CreateHarvest($input: HarvestInput!) {
+  createHarvest(input: $input) {
+    id
     crop
     seed_brand
     sowing_date
@@ -15,8 +21,6 @@ mutation CreateFarmDetails($input: CreateFarmDetailsInput!) {
     harvest_cutting_mode
     fertilizer
     pesticide
-    land_type
-    farm_id
     prev_seed_packets
     prev_seed_price
     prev_num_labour
@@ -30,14 +34,26 @@ mutation CreateFarmDetails($input: CreateFarmDetailsInput!) {
     comments
   }
 }
-mutation UpdateFarmDetails($input: UpdateFarmDetailsInput!) {
-  updateFarmDetails(input: $input) {
+mutation CreateFarmMapping($input: FarmMappingInput!) {
+  createFarmMapping(input: $input) {
+    farmID
+    harvestID
+  }
+}
+mutation UpdateFarm($input: UpdateFarmInput!) {
+  updateFarm(input: $input) {
     id
-    usermobile
+    farmID
     area
     locale
     coordinatesLat
-    coordinatesLon
+    coordinatesLng
+    land_type
+  }
+}
+mutation UpdateHarvest($input: UpdateHarvestInput!) {
+  updateHarvest(input: $input) {
+    id
     crop
     seed_brand
     sowing_date
@@ -46,8 +62,6 @@ mutation UpdateFarmDetails($input: UpdateFarmDetailsInput!) {
     harvest_cutting_mode
     fertilizer
     pesticide
-    land_type
-    farm_id
     prev_seed_packets
     prev_seed_price
     prev_num_labour
@@ -61,14 +75,20 @@ mutation UpdateFarmDetails($input: UpdateFarmDetailsInput!) {
     comments
   }
 }
-mutation DeleteFarmDetails($input: DeleteFarmDetailsInput!) {
-  deleteFarmDetails(input: $input) {
+mutation DeleteFarm($input: DeleteFarmInput!) {
+  deleteFarm(input: $input) {
     id
-    usermobile
+    farmID
     area
     locale
     coordinatesLat
-    coordinatesLon
+    coordinatesLng
+    land_type
+  }
+}
+mutation DeleteHarvest($input: DeleteHarvestInput!) {
+  deleteHarvest(input: $input) {
+    id
     crop
     seed_brand
     sowing_date
@@ -77,8 +97,6 @@ mutation DeleteFarmDetails($input: DeleteFarmDetailsInput!) {
     harvest_cutting_mode
     fertilizer
     pesticide
-    land_type
-    farm_id
     prev_seed_packets
     prev_seed_price
     prev_num_labour
@@ -90,5 +108,11 @@ mutation DeleteFarmDetails($input: DeleteFarmDetailsInput!) {
     prev_pesticide_packets
     prev_pesticide_charge
     comments
+  }
+}
+mutation DeleteFarmMapping($input: DeleteFarmMappingInput!) {
+  deleteFarmMapping(input: $input) {
+    farmID
+    harvestID
   }
 }

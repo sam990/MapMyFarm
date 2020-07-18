@@ -3,20 +3,28 @@ package com.mapmyfarm.mapmyfarm
 import androidx.recyclerview.widget.DiffUtil
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.mapmyfarm.mapmyfarm.FarmsDataStore.farmMap
+import com.mapmyfarm.mapmyfarm.FarmsDataStore.harvestMap
 
-@Entity
+@Entity(tableName = "farmHarvest")
 data class FarmHarvest(
-    @PrimaryKey val farm: Farm,
-    val harvests: List<Harvest>
+    @PrimaryKey val farmID: String,
+    var harvestIDs: ArrayList<String>
 ) {
     companion object {
         val DIFF_CALLBACK = object : DiffUtil.ItemCallback<FarmHarvest>(){
             override fun areItemsTheSame(oldItem: FarmHarvest, newItem: FarmHarvest): Boolean {
-                return oldItem.farm.id == newItem.farm.id
+                return oldItem.farmID == newItem.farmID
             }
 
             override fun areContentsTheSame(oldItem: FarmHarvest, newItem: FarmHarvest): Boolean {
-                return oldItem == newItem
+                if (oldItem.farmID != newItem.farmID) return false
+                if (farmMap[oldItem.farmID]?.timestamp != farmMap[newItem.farmID]?.timestamp) return false
+                if (oldItem.harvestIDs.size != newItem.harvestIDs.size) return false
+                for (i in oldItem.harvestIDs.indices) {
+                    if (harvestMap[oldItem.harvestIDs[i]]?.timestamp != harvestMap[newItem.harvestIDs[i]]?.timestamp) return false
+                }
+                return true
             }
 
         }
@@ -28,11 +36,11 @@ data class FarmHarvest(
 
         other as FarmHarvest
 
-        if (farm != other.farm) return false
-        if (harvests.size != other.harvests.size) return false
+        if (farmID != other.farmID) return false
+        if (harvestIDs.size != other.harvestIDs.size) return false
 
-        for (i in harvests.indices) {
-            if (harvests[i] != other.harvests[i]) {
+        for (i in harvestIDs.indices) {
+            if (harvestIDs[i] != other.harvestIDs[i]) {
                 return false
             }
         }
@@ -40,8 +48,8 @@ data class FarmHarvest(
     }
 
     override fun hashCode(): Int {
-        var result = farm.hashCode()
-        result = 31 * result + harvests.hashCode()
+        var result = farmID.hashCode()
+        result = 31 * result + harvestIDs.hashCode()
         return result
     }
 

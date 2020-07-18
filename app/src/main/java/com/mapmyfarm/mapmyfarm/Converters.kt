@@ -51,6 +51,35 @@ class Converters {
     }
 
 
+    @TypeConverter
+    fun jsonArrayToStringList(str: String?): ArrayList<String> {
+        if (str == null) {
+            return ArrayList()
+        }
+
+        val retList = ArrayList<String>()
+        val jsonArray = JSONArray(str)
+        for (i in 0 until jsonArray.length()) {
+            retList.add(jsonArray.getString(i))
+        }
+        return retList
+    }
+
+    @TypeConverter
+    fun stringListToJSONArray(list: ArrayList<String>?): String? {
+        val jsonArray = JSONArray()
+        if (list == null) {
+            return null
+        }
+
+        for (id in list) {
+            jsonArray.put(id)
+        }
+
+        return jsonArray.toString()
+    }
+
+
 /*
     @TypeConverter
     fun jSONArrayToDoubleList(str: String?): ArrayList<Double> {

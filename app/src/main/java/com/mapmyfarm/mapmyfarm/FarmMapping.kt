@@ -3,7 +3,7 @@ package com.mapmyfarm.mapmyfarm
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity
+@Entity(tableName = "farmMapping")
 data class FarmMapping (
     @PrimaryKey val farmID: String,
     val harvestID: String

@@ -3,8 +3,10 @@ package com.mapmyfarm.mapmyfarm
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.google.android.gms.maps.model.LatLng
+import java.util.*
+import kotlin.collections.ArrayList
 
-@Entity
+@Entity(tableName = "farm")
 data class Farm(
     @PrimaryKey val id: String,
     val farmID: String,
@@ -13,6 +15,9 @@ data class Farm(
     val coordinates: ArrayList<LatLng>,
     var landType: String?
 ) {
+
+    val timestamp = Date()
+
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false

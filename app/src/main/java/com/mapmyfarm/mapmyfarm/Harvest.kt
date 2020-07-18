@@ -4,7 +4,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import java.util.*
 
-@Entity
+@Entity(tableName = "harvest")
 data class Harvest(
     @PrimaryKey val id: String,
     val crop: String?,
@@ -26,4 +26,6 @@ data class Harvest(
     val prevPesticidePackets: Int?,
     val prevPesticidePrice: Int?,
     val comment: String?
-)
+) {
+    val timestamp = Date()
+}

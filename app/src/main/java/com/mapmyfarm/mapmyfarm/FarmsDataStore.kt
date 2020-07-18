@@ -23,17 +23,21 @@ import java.text.SimpleDateFormat
 import java.util.*
 import javax.annotation.Nonnull
 import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 import kotlin.concurrent.thread
 
-interface DataStoreOperationCallback{
-    fun onSuccess()
-    fun onError()
-}
+//interface DataStoreOperationCallback{
+//    fun onSuccess()
+//    fun onError()
+//}
 
+typealias DataStoreOperationCallback = (Boolean) -> Unit
 
 object FarmsDataStore {
 
-    @Volatile var farmsList: MutableList<FarmClass> = ArrayList()
+    @Volatile var farmsHarvests: MutableList<FarmHarvest> = ArrayList()
+    @Volatile var farmMap = HashMap<String, Farm>()
+    @Volatile var harvestMap = HashMap<String, Harvest>()
 
     private val sdf = SimpleDateFormat("yyyy-MM-ddZZZZZ", Locale.ENGLISH)
 //    private const val TAG = "FarmsDataStore"
@@ -48,17 +52,34 @@ object FarmsDataStore {
 
     @Synchronized fun refreshRoomDB(callback: DataStoreOperationCallback) {
         thread {
-            farmsList = ArrayList(db.farmDao().getAll())
-            callback.onSuccess()
+            farmMap.clear()
+            farmsHarvests.clear()
+            harvestMap.clear()
+
+            val farms = db.farmDao().getAll()
+            for (farm in farms) {
+                farmMap[farm.id] = farm
+            }
+
+            val harvests = db.harvestDao().getAll()
+            for (harvest in harvests) {
+                harvestMap[harvest.id] = harvest
+            }
+
+            farmsHarvests = ArrayList(db.farmHarvestDao().getAll())
+
+            callback(true)
         }
     }
 
     fun clearDB(callback: DataStoreOperationCallback) {
         thread {
             db.clearAllTables()
-            callback.onSuccess()
+            callback(true)
         }
     }
+
+
 
     fun fetchItems(callback: DataStoreOperationCallback) {
 
@@ -77,12 +98,12 @@ object FarmsDataStore {
                         }
                     }
                     db.farmDao().insertAll(farmsList)
-                    callback.onSuccess()
+                    callback(true)
                 }
 
 
                 override fun onFailure(e: ApolloException) {
-                    callback.onError()
+                    callback(false)
                 }
             })
     }
