@@ -26,7 +26,7 @@ import com.google.android.material.button.MaterialButton
 private const val LOCATION_PERMISSION_REQUEST_CODE = 990
 const val TAG = "Dashboard"
 
-class Dashboard : AppCompatActivity(), OnFarmCardClickListener {
+class Dashboard : AppCompatActivity() {
 
     lateinit var recyclerView: RecyclerView
     lateinit var farmAdapter: FarmAdapter
@@ -35,7 +35,7 @@ class Dashboard : AppCompatActivity(), OnFarmCardClickListener {
     lateinit var emptyView: TextView
     var locationPermissionEnabled = false
     lateinit var aboutDialog: AlertDialog
-    var fetchFromNetwok = false
+    var fetchFromNetwork = false
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -45,8 +45,10 @@ class Dashboard : AppCompatActivity(), OnFarmCardClickListener {
         recyclerView.itemAnimator = DefaultItemAnimator()
         val layoutManager: RecyclerView.LayoutManager = LinearLayoutManager(this)
         recyclerView.layoutManager = layoutManager
-        recyclerView.setHasFixedSize(true)
-        farmAdapter = FarmAdapter(this)
+//        recyclerView.setHasFixedSize(true)
+        farmAdapter = FarmAdapter( {farmID, harvestID -> onHarvestClick(farmID, harvestID)}) {
+            addHarvest(it)
+        }
         recyclerView.adapter = farmAdapter
         loadingDots = findViewById(R.id.recyclerview_loading_dots)
         emptyView = findViewById(R.id.recyclerview_empty)
@@ -84,7 +86,7 @@ class Dashboard : AppCompatActivity(), OnFarmCardClickListener {
         findViewById<MaterialButton>(R.id.dashboard_about).setOnClickListener {
             showAbout()
         }
-        fetchFromNetwok = intent.getBooleanExtra("LOAD_FROM_SERVER", false)
+        fetchFromNetwork = intent.getBooleanExtra("LOAD_FROM_SERVER", false)
         FarmsDataStore.initialiseRoomDB(this)
         startFetchingList()
     }
@@ -100,7 +102,7 @@ class Dashboard : AppCompatActivity(), OnFarmCardClickListener {
             return true
         }
         else if (item.order == 101) {
-            fetchFromNetwok = true
+            fetchFromNetwork = true
             startFetchingList()
             return true
         }
@@ -129,18 +131,17 @@ class Dashboard : AppCompatActivity(), OnFarmCardClickListener {
 
     private fun startFetchingList() {
         accessToFetch = true
-        val callback =
-            object : DataStoreOperationCallback {
-                override fun onSuccess() {
+        val callback: DataStoreOperationCallback = {
+                if(it) {
                     //populate
                    runOnUiThread {
-                        fetchFromNetwok = false
+                        fetchFromNetwork = false
                         loadingDots.stopAnimation()
                         loadingDots.visibility = View.GONE
                         recyclerView.visibility = View.VISIBLE
                     }
 
-                    if (FarmsDataStore.farmsList.size == 0) {
+                    if (FarmsDataStore.farmsHarvests.size == 0) {
                         runOnUiThread {
                             emptyView.setText(R.string.empty_message)
                             emptyView.visibility = View.VISIBLE
@@ -148,24 +149,31 @@ class Dashboard : AppCompatActivity(), OnFarmCardClickListener {
                     } else if (emptyView.visibility == View.VISIBLE) {
                         runOnUiThread { emptyView.visibility = View.GONE }
                     }
-                    val newList: List<FarmClass> = ArrayList(FarmsDataStore.farmsList)
+                    val newList = FarmsDataStore.farmsHarvests.toList()
                     farmAdapter.submitList(newList)
                 }
 
-                override fun onError() {
+                else {
                     Toast.makeText(applicationContext, "Unable to get data", Toast.LENGTH_LONG).show()
                 }
             }
-        if(fetchFromNetwok){
-            FarmsDataStore.fetchItems(callback)
+        if(fetchFromNetwork){
+            FarmsDataStore.refreshDataNetwork(callback)
         } else {
             FarmsDataStore.refreshRoomDB(callback)
         }
     }
 
-    override fun onCardClick(position: Int) {
+    private fun onHarvestClick(farmID: String, harvestID: String) {
         val myIntent = Intent(this, FarmEdit::class.java)
-        myIntent.putExtra("DATA_INDEX", position)
+        myIntent.putExtra("FARM_ID", farmID)
+        myIntent.putExtra("HARVEST_ID", harvestID)
+        startActivity(myIntent)
+    }
+
+    private fun addHarvest(farmID: String) {
+        val myIntent = Intent(this, FarmInput::class.java)
+        myIntent.putExtra("FARM_ID", farmID)
         startActivity(myIntent)
     }
 
@@ -226,8 +234,8 @@ class Dashboard : AppCompatActivity(), OnFarmCardClickListener {
     }
 
     private fun logoutUser() {
-        FarmsDataStore.clearDB(object: DataStoreOperationCallback{
-            override fun onSuccess() {
+        FarmsDataStore.clearDB {
+            if(it) {
                 runOnUiThread {
                     AWSMobileClient.getInstance().signOut()
                     //go to the login page
@@ -236,8 +244,7 @@ class Dashboard : AppCompatActivity(), OnFarmCardClickListener {
                     finish()
                 }
             }
-
-            override fun onError() {
+            else {
                 runOnUiThread {
                     Toast.makeText(applicationContext,
                         "Error Logout",
@@ -246,7 +253,7 @@ class Dashboard : AppCompatActivity(), OnFarmCardClickListener {
                 }
             }
 
-        })
+        }
     }
 
     private fun getUserDetails() {

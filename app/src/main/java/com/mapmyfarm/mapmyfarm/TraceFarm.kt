@@ -1,6 +1,5 @@
 package com.mapmyfarm.mapmyfarm
 
-import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.content.IntentSender.SendIntentException
@@ -12,25 +11,26 @@ import android.location.Location
 import android.os.Bundle
 import android.os.Looper
 import android.view.View
-import android.view.ViewGroup
-import android.widget.*
-import android.widget.AdapterView.OnItemClickListener
-import androidx.fragment.app.Fragment
+import android.widget.ProgressBar
+import android.widget.Toast
 import androidx.fragment.app.FragmentActivity
+import com.eyalbira.loadingdots.LoadingDots
 import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.*
 import com.google.android.gms.location.LocationServices.getFusedLocationProviderClient
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.GoogleMap.SnapshotReadyCallback
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
 import com.google.android.gms.tasks.Task
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.button.MaterialButton
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
+import com.google.android.material.textfield.TextInputLayout
 import com.google.maps.android.SphericalUtil
+import com.mapmyfarm.mapmyfarm.FarmsDataStore.addFarm
 import java.io.IOException
 import java.util.*
 import kotlin.collections.ArrayList
@@ -56,6 +56,7 @@ class TraceFarm : FragmentActivity(), OnMapReadyCallback {
     private var lastLocation: Location? = null
     private val REQUEST_CHECK_SETTINGS = 2
     private var isTracing = false
+    private var traceComplete = false
     var polygon: Polygon? = null
     private var mLocationCallback: LocationCallback? = null
     private var currentCounter = 0
@@ -69,6 +70,14 @@ class TraceFarm : FragmentActivity(), OnMapReadyCallback {
     @Volatile
     private var location : String = "unknown"
 
+    lateinit var bottomSheetBehavior: BottomSheetBehavior<View>
+    lateinit var sheetSave: MaterialButton
+    lateinit var sheetCancel: MaterialButton
+    lateinit var sheetArea: TextInputLayout
+    lateinit var sheetLocale: TextInputLayout
+    lateinit var sheetLandType: TextInputLayout
+    lateinit var saveLoading: LoadingDots
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_trace_farm)
@@ -77,6 +86,7 @@ class TraceFarm : FragmentActivity(), OnMapReadyCallback {
             .findFragmentById(R.id.map) as SupportMapFragment?)!!
         mapFragment.getMapAsync(this)
         initialiseButtons()
+        initialiseBottomSheet()
         manageLocationSetting()
     }
 
@@ -261,7 +271,7 @@ class TraceFarm : FragmentActivity(), OnMapReadyCallback {
 
     private fun initialiseButtons() {
         traceConfirm = findViewById(R.id.trace_confirm)
-        traceConfirm?.setOnClickListener {
+        traceConfirm.setOnClickListener {
             run {
                 if (!isTracing) {
 
@@ -294,8 +304,14 @@ class TraceFarm : FragmentActivity(), OnMapReadyCallback {
                             .show()
                     }
 
-                } else {
-                    if (polygon!!.points.size < 4) {
+                }
+
+                else if(traceComplete) {
+                    tracingComplete()
+                }
+
+                else {
+                    if (false && polygon!!.points.size < 4) {
                         Snackbar.make(
                             findViewById(R.id.trace_confirm),
                             "Not enough points", Snackbar.LENGTH_LONG
@@ -304,7 +320,8 @@ class TraceFarm : FragmentActivity(), OnMapReadyCallback {
                             .show()
                     } else {
                         stopLocationUpdate()
-                        runOnUiThread { progressBar!!.visibility = View.VISIBLE }
+                        traceComplete = true
+                        runOnUiThread { progressBar.visibility = View.VISIBLE }
                         pointsList = ArrayList(polygon!!.points)
                         getLocationAndCalculateArea()
                     }
@@ -312,12 +329,13 @@ class TraceFarm : FragmentActivity(), OnMapReadyCallback {
             }
         }
         traceDismiss = findViewById(R.id.trace_dismiss)
-        traceDismiss?.setOnClickListener { finish() }
+        traceDismiss.setOnClickListener { finish() }
             traceReset = findViewById(R.id.trace_reset)
-        traceReset?.setOnClickListener {
+        traceReset.setOnClickListener {
+            traceComplete = false
             if (isTracing) {
                 isTracing = false
-                traceConfirm?.setImageResource(android.R.drawable.ic_input_add)
+                traceConfirm.setImageResource(android.R.drawable.ic_input_add)
             }
             if (polygon != null) {
                 polygon?.remove()
@@ -367,12 +385,91 @@ class TraceFarm : FragmentActivity(), OnMapReadyCallback {
         if (lastMarker != null)
             lastMarker?.remove()
         lastMarker = null
-        val myIntent = Intent(this, FarmInput::class.java)
-        myIntent.putExtra("POINTS_LIST", pointsList)
-        myIntent.putExtra("LOCATION", location)
-        myIntent.putExtra("AREA", area)
-        startActivity(myIntent)
-        finish()
+
+        progressBar.post { progressBar.visibility = View.GONE }
+        // Bottom Sheet
+        showBottomSheet()
     }
 
+    fun initialiseBottomSheet() {
+        val bottomSheet = findViewById<View>(R.id.trace_farm_bottom_sheet)
+        bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet)
+        bottomSheetBehavior.peekHeight = 0
+        bottomSheetBehavior.isDraggable = false
+
+        sheetArea = findViewById(R.id.farm_area_input)
+        sheetLocale = findViewById(R.id.farm_locale_input)
+        sheetLandType = findViewById(R.id.farm_landtype_input)
+
+        // save and cancel
+        sheetSave = findViewById(R.id.bottom_sheet_save)
+        sheetCancel = findViewById(R.id.bottom_sheet_cancel)
+        saveLoading = findViewById(R.id.bottom_sheet_loadingdot)
+
+        // sheet cancel
+        sheetCancel.setOnClickListener {
+            closeBottomSheet()
+        }
+
+        sheetSave.setOnClickListener {
+            sheetSave.post {
+                sheetSave.text = ""
+                sheetSave.isEnabled = false
+            }
+            saveLoading.post { saveLoading.visibility = View.VISIBLE }
+            saveFarm()
+        }
+    }
+
+    private fun showBottomSheet() {
+        sheetArea.editText?.setText(area.toString())
+        sheetLocale.editText?.setText(location)
+        hideTraceButtons()
+        bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+    }
+
+
+    private fun closeBottomSheet() {
+        bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+        showTraceButtons()
+    }
+
+    // save the farm
+    private fun saveFarm() {
+
+        val finalArea = sheetArea.editText?.text.toString().toDouble()
+        val finalLocale = sheetLocale.editText?.text.toString()
+        val landType = sheetLandType.editText?.text.toString()
+
+        addFarm(finalArea, finalLocale, pointsList, landType) {
+           if(it == null) {
+               saveError()
+           } else {
+               saveComplete(it)
+           }
+        }
+    }
+
+    private fun saveError() {
+        saveLoading.post { saveLoading.visibility = View.GONE }
+        sheetSave.post {
+            sheetSave.text = getString(R.string.save)
+            sheetSave.isEnabled = true
+        }
+        runOnUiThread {
+            Toast.makeText(applicationContext, "Error saving farm. Please check connection", Toast.LENGTH_LONG).show()
+        }
+    }
+
+    private fun saveComplete(farmID: String) {
+        saveLoading.post { saveLoading.visibility = View.GONE }
+        sheetSave.post { sheetSave.text = getString(R.string.save) }
+        runOnUiThread {
+            closeBottomSheet()
+            val myIntent = Intent(this, FarmInput::class.java)
+            myIntent.putExtra("FARM_ID", farmID)
+            startActivity(myIntent)
+            finish()
+        }
+    }
 }

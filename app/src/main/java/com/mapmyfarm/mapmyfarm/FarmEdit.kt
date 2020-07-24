@@ -7,7 +7,9 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
+import com.mapmyfarm.mapmyfarm.FarmsDataStore.harvestMap
 import com.mapmyfarm.mapmyfarm.FarmsDataStore.updateFarm
+import com.mapmyfarm.mapmyfarm.FarmsDataStore.updateHarvest
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -17,21 +19,24 @@ class FarmEdit : FarmInput() {
 
     companion object{
         const val DELETED = 6727
+        const val DisplayFarmReturnCode = 888762
     }
 
-    private val DisplayFarmReturnCode = 888762
 
-    lateinit var farm: FarmClass
-    val sdf = SimpleDateFormat("yyyy/MM/dd")
-    var index = -1
+    lateinit var harvest: Harvest
+    private val sdf = SimpleDateFormat("yyyy/MM/dd", Locale.ENGLISH)
+
+    var farmID = ""
+    var harvestID = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        println("hello")
-        index = intent.getIntExtra("DATA_INDEX", -1)
-        if(index >= 0){
-            farm = FarmsDataStore.farmsList[index]
-        } else {
+        farmID = intent.getStringExtra("FARM_ID") ?: ""
+        harvestID = intent.getStringExtra("HARVEST_ID") ?: ""
+        title = "Edit Harvest"
+        harvestMap[harvestID]?.let {
+            harvest = it
+        } ?: run {
             Toast.makeText(applicationContext, "Error", Toast.LENGTH_SHORT).show()
             finish()
         }
@@ -44,9 +49,9 @@ class FarmEdit : FarmInput() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.order == 100){
+        if (item.itemId == R.id.view_farm_menu){
             val myIntent = Intent(this, FarmDisplay::class.java).apply {
-                putExtra("DATA_INDEX", index)
+                putExtra("FARM_ID", farmID)
             }
             startActivityForResult(myIntent, DisplayFarmReturnCode )
         }
@@ -54,55 +59,39 @@ class FarmEdit : FarmInput() {
     }
 
     private fun loadDataInViews() {
-        cropInput.editText?.setText(farm.crop)
-        seedBrandInput.editText?.setText(farm.seedBrand)
-        seedNumInput.editText?.setText(farm.prevSeedPieces?.toString())
-        seedPriceInput.editText?.setText(farm.prevSeedPrice?.toString())
-        sowDateInput.editText?.setText(sdf.format(farm.sowingDate))
-        plantingInput.editText?.setText(farm.plantingMode)
-        weedingInput.editText?.setText(farm.weedingMode)
-        hcmInput.editText?.setText(farm.harvestCuttingMode)
-        workerNumInput.editText?.setText(farm.prevLabourNum?.toString())
-        workerDaysInput.editText?.setText(farm.prevLabourDays?.toString())
-        workerPriceInput.editText?.setText(farm.prevLabourCharge?.toString())
-        machinePriceInput.editText?.setText(farm.prevMachineryCharge?.toString())
-        fertInput.editText?.setText(farm.fertilizer)
-        fertNumInput.editText?.setText(farm.prevFertilizerPieces?.toString())
-        fertPriceInput.editText?.setText(farm.prevFertilizerPrice?.toString())
-        pestInput.editText?.setText(farm.pesticide)
-        pestNumInput.editText?.setText(farm.prevPesticidePieces?.toString())
-        pestPriceInput.editText?.setText(farm.prevPesticidePrice?.toString())
-        landTypeInput.editText?.setText(farm.landType)
-        commentsInput.editText?.setText(farm.comment)
+        cropInput.editText?.setText(harvest.crop)
+        seedBrandInput.editText?.setText(harvest.seedBrand)
+        seedNumInput.editText?.setText(harvest.prevSeedPackets?.toString())
+        seedPriceInput.editText?.setText(harvest.prevSeedPrice?.toString())
+        sowDateInput.editText?.setText(sdf.format(harvest.sowingDate))
+        plantingInput.editText?.setText(harvest.plantingMode)
+        weedingInput.editText?.setText(harvest.weedingMode)
+        hcmInput.editText?.setText(harvest.harvestCuttingMode)
+        workerNumInput.editText?.setText(harvest.prevLabourNum?.toString())
+        workerDaysInput.editText?.setText(harvest.prevLabourDays?.toString())
+        workerPriceInput.editText?.setText(harvest.prevLabourCharge?.toString())
+        machinePriceInput.editText?.setText(harvest.prevMachineryCharge?.toString())
+        fertInput.editText?.setText(harvest.fertilizer)
+        fertNumInput.editText?.setText(harvest.prevFertilizerPackets?.toString())
+        fertPriceInput.editText?.setText(harvest.prevFertilizerPrice?.toString())
+        pestInput.editText?.setText(harvest.pesticide)
+        pestNumInput.editText?.setText(harvest.prevPesticidePackets?.toString())
+        pestPriceInput.editText?.setText(harvest.prevPesticidePrice?.toString())
+        commentsInput.editText?.setText(harvest.comment)
     }
 
     override fun performOperation() {
         val date = sdf.parse(sowDateInput.editText?.text.toString())
-        val callback = object: DataStoreOperationCallback{
-            override fun onSuccess() {
-                finish()
-            }
-
-            override fun onError() {
-                loadingDots.post { loadingDots.visibility = View.GONE }
-                saveButton.post { saveButton.text = "Save" }
-                Toast.makeText(applicationContext, "Unable to save data", Toast.LENGTH_LONG).show()
-            }
-
-        }
-        updateFarm(
-            farm.id,
-            null,
-            date,
+        updateHarvest(
+            harvestID,
             cropInput.editText?.text.toString(),
+            date,
             seedBrandInput.editText?.text.toString(),
             plantingInput.editText?.text.toString(),
             weedingInput.editText?.text.toString(),
             hcmInput.editText?.text.toString(),
             fertInput.editText?.text.toString(),
             pestInput.editText?.text.toString(),
-            landTypeInput.editText?.text.toString(),
-            null,
             seedNumInput.editText?.text.toString().toIntOrNull(),
             seedPriceInput.editText?.text.toString().toIntOrNull(),
             workerNumInput.editText?.text.toString().toIntOrNull(),
@@ -114,8 +103,18 @@ class FarmEdit : FarmInput() {
             pestNumInput.editText?.text.toString().toIntOrNull(),
             pestPriceInput.editText?.text.toString().toIntOrNull(),
             commentsInput.editText?.text.toString(),
-            callback
-        )
+        ) {
+            if (it) {
+                runOnUiThread { this.finish() }
+            }
+            else {
+                loadingDots.post { loadingDots.visibility = View.GONE }
+                saveButton.post { saveButton.text = "Save" }
+                runOnUiThread {
+                    Toast.makeText(applicationContext, "Unable to save data", Toast.LENGTH_LONG).show()
+                }
+            }
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

@@ -26,6 +26,4 @@ data class Harvest(
     val prevPesticidePackets: Int?,
     val prevPesticidePrice: Int?,
     val comment: String?
-) {
-    val timestamp = Date()
-}
+)

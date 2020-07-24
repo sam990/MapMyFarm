@@ -42,4 +42,5 @@
     <string name="email_not_valid">Email is not valid</string>
     <string name="err_saving_details">Error saving details</string>
     <string name="mapmyfarm_contact">tel:+918374474447</string>
+    <string name="cancel">Cancel</string>
 </resources>

@@ -9,14 +9,22 @@ import kotlin.collections.ArrayList
 @Entity(tableName = "farm")
 data class Farm(
     @PrimaryKey val id: String,
-    val farmID: String,
+    val farmID: Int,
     var area: Double,
     val locale: String?,
-    val coordinates: ArrayList<LatLng>,
+    val coordinates: List<LatLng>,
     var landType: String?
 ) {
+    constructor(): this (
+        "",
+        0,
+        0.0,
+        "",
+        emptyList<LatLng>(),
+        ""
+    )
 
-    val timestamp = Date()
+//    val timestamp = Date()
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

@@ -12,5 +12,7 @@
     <color name="errorRed">#B60000</color>
     <color name="darkRed">#310000</color>
     <color name="polygonStrokeColor">#FF00B0FF</color>
+    <color name="darkGreen">#33562E</color>
+    <color name="lightGreen">#87CB7F</color>
     <color name="mtrl_textinput_default_box_stroke_color">#000</color>
 </resources>

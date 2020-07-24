@@ -1,7 +1,6 @@
 package com.mapmyfarm.mapmyfarm
 
 
-import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -15,25 +14,28 @@ import com.google.android.gms.maps.model.Polygon
 import com.google.android.gms.maps.model.PolygonOptions
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
-
+import com.mapmyfarm.mapmyfarm.FarmsDataStore.farmMap
 
 
 class FarmDisplay : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLoadedCallback {
 
     private lateinit var mMap: GoogleMap
     private val POLYGON_PADDING= 200
-    lateinit var farm: FarmClass
-    var index: Int = -1
+    lateinit var farm: Farm
+    var farmID = ""
 
     lateinit var deleteButton: FloatingActionButton
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_farm_display)
-        index = intent.getIntExtra("DATA_INDEX", -1)
-        if(index >= 0){
-            farm = FarmsDataStore.farmsList[index]
-        } else {
+        title = "Farm View"
+        farmID = intent.getStringExtra("FARM_ID") ?: ""
+
+
+        farmMap[farmID]?.let {
+            farm = it
+        } ?: run {
             Toast.makeText(applicationContext, "Error", Toast.LENGTH_SHORT).show()
             finish()
         }
@@ -81,22 +83,22 @@ class FarmDisplay : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLoad
     }
 
     private fun deleteOperation() {
-        val callback: DataStoreOperationCallback =
-            object : DataStoreOperationCallback {
-                override fun onSuccess() {
-                    setResult(FarmEdit.DELETED)
+        FarmsDataStore.deleteFarm(farm.id) {
+            if (it) {
+                runOnUiThread {
+                    this.setResult(FarmEdit.DELETED)
                     finish()
                 }
-
-                override fun onError() {
+            } else {
+                runOnUiThread {
                     Snackbar.make(
-                        findViewById(R.id.delete_area),
-                        "Unable to delete. Try Later", Snackbar.LENGTH_LONG
-                    )
+                            findViewById(R.id.delete_area),
+                            "Unable to delete. Try Later", Snackbar.LENGTH_LONG
+                        )
                         .show()
                 }
             }
-        FarmsDataStore.deleteFarm(farm.id, callback)
+        }
     }
 
 

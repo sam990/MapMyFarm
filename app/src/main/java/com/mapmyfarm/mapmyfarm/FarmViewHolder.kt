@@ -2,36 +2,68 @@ package com.mapmyfarm.mapmyfarm
 
 import android.graphics.Color
 import android.text.format.DateUtils
+import android.view.LayoutInflater
 import android.view.View
+import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import java.text.FieldPosition
 import java.text.SimpleDateFormat
 import java.util.*
 
 
-interface OnFarmCardClickListener{
-    fun onCardClick(position: Int)
-}
+typealias OnHarvestCardClickListener = (String, String) -> Unit
+typealias AddHarvestCardClickListener = (String) -> Unit
+
+private val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH)
 
 class FarmViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
 
+    var farmView: CardView = view.findViewById(R.id.farm_cardview)
     private val farmIDView: TextView = view.findViewById(R.id.cardview_farmid)
-    private val cropView: TextView = view.findViewById(R.id.cardview_crop_value)
-    private var areaView: TextView = view.findViewById(R.id.cardview_area_value)
-    var dateView: TextView = view.findViewById(R.id.cardview_date_value)
+    private val areaView: TextView = view.findViewById(R.id.cardview_area_value)
+    private val expandView: LinearLayout = view.findViewById(R.id.expanded_view)
 
 
-    fun bindTo(farm: FarmClass, listener: OnFarmCardClickListener ) {
-        farmIDView.text = farm.farmID
-        cropView.text = farm.crop
-
+    fun bindTo(farm: Farm) {
+        farmIDView.text = farm.farmID.toString().padStart(3, '0')
         val areaVal: String = java.lang.String.format(Locale.getDefault(), "%.2f", farm.area)
         areaView.text = areaVal
-        val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH)
-        dateView.text = sdf.format(farm.sowingDate ?: "undated")
-        itemView.setOnClickListener {
-            listener.onCardClick(adapterPosition)
-        }
     }
+
+    fun showExpandedView(farmHarvest: FarmHarvest, listener: OnHarvestCardClickListener, addNewListener: AddHarvestCardClickListener) {
+
+        val inflater = LayoutInflater.from(expandView.context)
+        for (harvest in farmHarvest.harvests) {
+            // inflate a view
+            val harvestView = inflater.inflate(R.layout.harvest_cardview, expandView, false)
+            harvestView.findViewById<TextView>(R.id.cardview_harvest).text = harvest.crop
+            harvestView.findViewById<TextView>(R.id.cardview_sowdate).text = sdf.format(harvest.sowingDate)
+            // attach listener
+            harvestView.setOnClickListener {
+                listener(farmHarvest.farmID, harvest.id)
+            }
+            expandView.addView(harvestView)
+        }
+
+        // add new Harvest view
+        val addHarvestView = inflater.inflate(R.layout.add_harvest_cardview, expandView, false)
+        // set listener
+        addHarvestView.setOnClickListener {
+            addNewListener(farmHarvest.farmID)
+        }
+
+        expandView.addView(addHarvestView)
+        // show the view
+        expandView.visibility = View.VISIBLE
+    }
+
+
+    fun hideExpandedView() {
+        expandView.visibility = View.GONE
+        // remove all child views
+        expandView.removeAllViews()
+    }
+
 }

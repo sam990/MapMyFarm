@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:clipToPadding="true"
+    android:id="@+id/trace_farm_bottom_sheet"
+    android:background="@android:color/white"
+    app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:textColor="@android:color/black"
+        android:textAllCaps="true"
+        android:layout_marginTop="16dp"
+        android:textStyle="bold"
+        android:text="Farm Properties"/>
+
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Area (acres)"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        app:boxStrokeColor="@android:color/black"
+        app:boxStrokeWidth="2dp"
+        android:id="@+id/farm_area_input"
+        android:padding="8dp"
+        android:layout_marginTop="8dp"
+        >
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/black"
+            android:inputType="numberDecimal"
+            />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Locale"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        app:boxStrokeColor="@android:color/black"
+        app:boxStrokeWidth="2dp"
+        android:id="@+id/farm_locale_input"
+        android:padding="8dp"
+        android:layout_marginTop="8dp"
+        >
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/black"
+            android:inputType="text"
+            />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Landtype"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        app:boxStrokeColor="@android:color/black"
+        app:boxStrokeWidth="2dp"
+        android:id="@+id/farm_landtype_input"
+        android:padding="8dp"
+        android:layout_marginTop="8dp"
+        >
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/black"
+            android:inputType="text"
+            />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="5dp"
+        android:gravity="center_horizontal">
+
+        <com.google.android.material.button.MaterialButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/bottom_sheet_save"
+            android:id="@+id/bottom_sheet_cancel"
+            android:text="@string/cancel"
+            android:backgroundTint="@color/button_background"
+            android:textAllCaps="false"
+            android:textColor="@android:color/white"
+            app:cornerRadius="20dp"
+            android:elevation="5dp">
+        </com.google.android.material.button.MaterialButton>
+
+
+        <com.google.android.material.button.MaterialButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toEndOf="@id/bottom_sheet_cancel"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:id="@+id/bottom_sheet_save"
+            android:text="@string/save"
+            android:backgroundTint="@color/button_background"
+            android:textAllCaps="false"
+            android:textColor="@android:color/white"
+            app:cornerRadius="20dp"
+            android:elevation="5dp">
+        </com.google.android.material.button.MaterialButton>
+
+        <com.eyalbira.loadingdots.LoadingDots
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/bottom_sheet_loadingdot"
+            android:visibility="gone"
+            app:layout_constraintTop_toTopOf="@+id/bottom_sheet_save"
+            app:layout_constraintBottom_toBottomOf="@+id/bottom_sheet_save"
+            app:layout_constraintStart_toStartOf="@id/bottom_sheet_save"
+            app:layout_constraintEnd_toEndOf="@id/bottom_sheet_save"
+            app:LoadingDots_dots_color="@android:color/white"
+            app:LoadingDots_auto_play="true"
+            app:LoadingDots_dots_count="4"
+            app:LoadingDots_dots_size="5dp"
+            app:LoadingDots_dots_space="4dp"
+            android:elevation="12dp"
+
+            app:LoadingDots_loop_duration="800"
+            app:LoadingDots_loop_start_delay="100"
+
+            app:LoadingDots_jump_duration="200"
+            app:LoadingDots_jump_height="8dp"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</LinearLayout>

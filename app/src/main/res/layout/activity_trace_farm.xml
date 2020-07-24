@@ -74,4 +74,6 @@
         app:tint="@android:color/white" />
 
 
+   <include layout="@layout/farm_bottomsheet"/>
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

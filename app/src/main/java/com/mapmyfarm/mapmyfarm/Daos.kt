@@ -26,6 +26,9 @@ interface FarmDao {
     @Delete
     fun delete(farm: Farm)
 
+    @Query("DELETE FROM farm")
+    fun deleteAll()
+
     @Query("DELETE FROM farm WHERE id = :delID")
     fun deleteByID(delID: String)
 
@@ -51,10 +54,13 @@ interface HarvestDao {
     fun insertAll(harvests: List<Harvest>)
 
     @Update
-    fun updateFarms(vararg harvest: Harvest)
+    fun updateHarvests(vararg harvest: Harvest)
 
     @Delete
     fun delete(harvest: Harvest)
+
+    @Query("DELETE FROM harvest")
+    fun deleteAll()
 
     @Query("DELETE FROM harvest WHERE id = :delID")
     fun deleteByID(delID: String)
@@ -72,10 +78,13 @@ interface FarmMappingDao {
     fun insertAll(farmMappings: List<FarmMapping>)
 
     @Update
-    fun updateFarms(vararg farmMapping: FarmMapping)
+    fun updateFarmMappings(vararg farmMapping: FarmMapping)
 
     @Delete
     fun delete(farmMapping: FarmMapping)
+
+    @Query("DELETE FROM farmMapping")
+    fun deleteAll()
 
     @Query("DELETE FROM farmMapping WHERE farmID = :farmID AND harvestID = :harvestID")
     fun deleteByID(farmID: String, harvestID: String)
@@ -93,10 +102,13 @@ interface FarmHarvestDao {
     fun insertAll(farmHarvests: List<FarmHarvest>)
 
     @Update
-    fun updateFarms(vararg farmHarvest: FarmHarvest)
+    fun updateFarmHarvests(vararg farmHarvest: FarmHarvest)
 
     @Delete
     fun delete(farmHarvest: FarmHarvest)
+
+    @Query("DELETE FROM farmHarvest")
+    fun deleteAll()
 
     @Query("DELETE FROM farmHarvest WHERE farmID = :farmID")
     fun deleteByID(farmID: String)

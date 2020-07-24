@@ -20,7 +20,7 @@ class Converters {
     }
 
     @TypeConverter
-    fun fromJSONArray(str: String?): ArrayList<LatLng> {
+    fun fromJSONArray(str: String?): List<LatLng> {
         if(str == null) {
             return ArrayList()
         }
@@ -30,11 +30,11 @@ class Converters {
             val jsonObj = jsonArray.getJSONObject(i)
             retList.add(LatLng(jsonObj.getDouble("latitude"), jsonObj.getDouble("longitude") ))
         }
-        return retList
+        return retList.toList()
     }
 
     @TypeConverter
-    fun listToJSONArray(list: ArrayList<LatLng>?): String? {
+    fun listToJSONArray(list: List<LatLng>?): String? {
         val jsonArray = JSONArray()
         if (list == null) {
             return null
@@ -52,9 +52,9 @@ class Converters {
 
 
     @TypeConverter
-    fun jsonArrayToStringList(str: String?): ArrayList<String> {
+    fun jsonArrayToStringList(str: String?): List<String> {
         if (str == null) {
-            return ArrayList()
+            return emptyList()
         }
 
         val retList = ArrayList<String>()
@@ -62,11 +62,11 @@ class Converters {
         for (i in 0 until jsonArray.length()) {
             retList.add(jsonArray.getString(i))
         }
-        return retList
+        return retList.toList()
     }
 
     @TypeConverter
-    fun stringListToJSONArray(list: ArrayList<String>?): String? {
+    fun stringListToJSONArray(list: List<String>?): String? {
         val jsonArray = JSONArray()
         if (list == null) {
             return null

@@ -116,3 +116,9 @@ mutation DeleteFarmMapping($input: DeleteFarmMappingInput!) {
     harvestID
   }
 }
+mutation BatchDeleteFarmMappings($input: [DeleteFarmMappingInput]!) {
+  batchDeleteFarmMappings(input: $input) {
+    farmID
+    harvestID
+  }
+}

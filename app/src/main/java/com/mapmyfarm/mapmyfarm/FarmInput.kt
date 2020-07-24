@@ -13,7 +13,9 @@ import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.mapmyfarm.mapmyfarm.FarmsDataStore.addFarm
-import com.mapmyfarm.mapmyfarm.FarmsDataStore.farmsList
+import com.mapmyfarm.mapmyfarm.FarmsDataStore.addFarmMapping
+import com.mapmyfarm.mapmyfarm.FarmsDataStore.addHarvest
+import com.mapmyfarm.mapmyfarm.FarmsDataStore.farmMap
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
@@ -49,7 +51,6 @@ open class FarmInput : AppCompatActivity() {
     lateinit var pestInput: TextInputLayout
     lateinit var pestNumInput: TextInputLayout
     lateinit var pestPriceInput: TextInputLayout
-    lateinit var landTypeInput: TextInputLayout
     lateinit var commentsInput: TextInputLayout
 
 
@@ -64,21 +65,36 @@ open class FarmInput : AppCompatActivity() {
 
     val totalPrices = IntArray(5)
     var area = 0.0
-    var location: String? = ""
+
+
+    lateinit var fID: String
+    var farmNumberID = 0
+
     lateinit var pointsList: ArrayList<LatLng>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_farm_input)
-        title = "Farm Input"
+        title = "Harvest Input"
         initialiseButtons()
         initialiseInputs()
         initialiseTextViews()
         initialisePrices()
         initialiseDatePicker()
-        area = intent.getDoubleExtra("AREA", 0.0)
-        location = intent.getStringExtra("LOCATION")
-        pointsList = intent.getParcelableArrayListExtra("POINTS_LIST") ?: ArrayList()
+
+        fID = intent.getStringExtra("FARM_ID") ?: ""
+
+        if (fID.isEmpty()) {
+            Toast.makeText(applicationContext, "Some Error occurred. Please try again later.", Toast.LENGTH_LONG).show()
+            finish()
+        }
+
+        farmNumberID = farmMap[fID]?.farmID ?: 0
+        area = farmMap[fID]?.area ?: 0.0
+
+        // set the farmNumber id
+        findViewById<TextView>(R.id.farm_id_text_view).text = farmNumberID.toString().padStart(3, '0')
+
     }
 
     private fun initialiseButtons() {
@@ -87,9 +103,11 @@ open class FarmInput : AppCompatActivity() {
         loadingDots = findViewById(R.id.farm_save_loadingdot)
         saveButton.setOnClickListener {
             (it as MaterialButton).text = ""
+            it.isEnabled = false
             loadingDots.visibility = View.VISIBLE
             if(!verifyInputs()){
                 it.text = getString(R.string.save)
+                it.isEnabled = true
                 loadingDots.visibility = View.GONE
             } else {
                 performOperation()
@@ -137,7 +155,6 @@ open class FarmInput : AppCompatActivity() {
         pestNumInput = findViewById(R.id.pestnum)
         pestPriceInput = findViewById(R.id.pestprice)
 
-        landTypeInput = findViewById(R.id.land_type_input)
 
         commentsInput = findViewById(R.id.comments_input)
 
@@ -201,8 +218,7 @@ open class FarmInput : AppCompatActivity() {
 
 
     //textWatcher method
-    private fun updatePrice(current: String, otherInput: EditText?,
-                    priceView: TextView, index: Int) {
+    private fun updatePrice(current: String, otherInput: EditText?, priceView: TextView, index: Int) {
         if(current.isEmpty() || otherInput?.text?.isEmpty() == true) {
             priceView.text = ""
             totalPrices[index] = 0
@@ -233,8 +249,7 @@ open class FarmInput : AppCompatActivity() {
         priceView.text = "Total Rs.${totalPrices[index]}"
     }
 
-    private fun updateMachinePrice(current: String,
-                    priceView: TextView, index: Int) {
+    private fun updateMachinePrice(current: String, priceView: TextView, index: Int) {
         if(current.isEmpty() || area == 0.0) {
             priceView.text = ""
             totalPrices[index] = 0
@@ -302,35 +317,16 @@ open class FarmInput : AppCompatActivity() {
     protected open fun performOperation() {
         val sdf = SimpleDateFormat("yyyy/MM/dd")
         val date = sdf.parse(sowDateInput.editText?.text.toString())
-        val farmID = (farmsList.size + 1).toString().padStart(3 , '0')
-        val callback = object: DataStoreOperationCallback{
-            override fun onSuccess() {
-                finish()
-            }
 
-            override fun onError() {
-                loadingDots.post { loadingDots.visibility = View.GONE }
-                saveButton.post { saveButton.text = "Save" }
-                Toast.makeText(applicationContext, "Unable to save data", Toast.LENGTH_LONG).show()
-            }
-
-        }
-
-
-        addFarm(
-            area,
-            farmID,
-            date ?: Date(),
-            pointsList,
+        addHarvest(
             cropInput.editText?.text.toString(),
+            date ?: Date(),
             seedBrandInput.editText?.text.toString(),
             plantingInput.editText?.text.toString(),
             weedingInput.editText?.text.toString(),
             hcmInput.editText?.text.toString(),
             fertInput.editText?.text.toString(),
             pestInput.editText?.text.toString(),
-            landTypeInput.editText?.text.toString(),
-            location,
             seedNumInput.editText?.text.toString().toIntOrNull(),
             seedPriceInput.editText?.text.toString().toIntOrNull(),
             workerNumInput.editText?.text.toString().toIntOrNull(),
@@ -342,7 +338,37 @@ open class FarmInput : AppCompatActivity() {
             pestNumInput.editText?.text.toString().toIntOrNull(),
             pestPriceInput.editText?.text.toString().toIntOrNull(),
             commentsInput.editText?.text.toString(),
-            callback
-            )
+            ) {
+            if (it == null) {
+                // error
+                saveError()
+            } else {
+                addMapping(fID, it)
+            }
+        }
+    }
+
+    fun addMapping(farmID: String, harvestID: String) {
+        addFarmMapping(farmID, harvestID) {
+            if(it) {
+                saveSuccess()
+            } else {
+                saveError()
+            }
+        }
+    }
+
+    fun saveSuccess() {
+        runOnUiThread {
+            finish()
+        }
+    }
+
+    fun saveError() {
+        loadingDots.post { loadingDots.visibility = View.GONE }
+        saveButton.post { saveButton.text = "Save" }
+        runOnUiThread {
+            Toast.makeText(applicationContext, "Unable to save data", Toast.LENGTH_LONG).show()
+        }
     }
 }
