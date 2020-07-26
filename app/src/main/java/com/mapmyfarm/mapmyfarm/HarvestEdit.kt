@@ -1,21 +1,20 @@
 package com.mapmyfarm.mapmyfarm
 
-import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
+import com.mapmyfarm.mapmyfarm.FarmsDataStore.deleteHarvest
 import com.mapmyfarm.mapmyfarm.FarmsDataStore.harvestMap
-import com.mapmyfarm.mapmyfarm.FarmsDataStore.updateFarm
 import com.mapmyfarm.mapmyfarm.FarmsDataStore.updateHarvest
 import java.text.SimpleDateFormat
 import java.util.*
 
 
 
-class FarmEdit : FarmInput() {
+class HarvestEdit : HarvestDetailsInput() {
 
     companion object{
         const val DELETED = 6727
@@ -50,11 +49,23 @@ class FarmEdit : FarmInput() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.view_farm_menu){
-            val myIntent = Intent(this, FarmDisplay::class.java).apply {
-                putExtra("FARM_ID", farmID)
-            }
-            startActivityForResult(myIntent, DisplayFarmReturnCode )
+
         }
+        when (item.itemId) {
+            R.id.view_farm_menu -> {
+                val myIntent = Intent(this, FarmDisplay::class.java).apply {
+                    putExtra("FARM_ID", farmID)
+                }
+                startActivityForResult(myIntent, DisplayFarmReturnCode )
+                return true
+            }
+
+            R.id.delete_harvest_menu -> {
+                deleteHarvestOperation()
+                return true
+            }
+        }
+
         return super.onOptionsItemSelected(item)
     }
 
@@ -113,6 +124,34 @@ class FarmEdit : FarmInput() {
                 runOnUiThread {
                     Toast.makeText(applicationContext, "Unable to save data", Toast.LENGTH_LONG).show()
                 }
+            }
+        }
+    }
+
+    private fun deleteHarvestOperation() {
+        saveButton.apply {
+            text = ""
+            isEnabled = false
+        }
+        loadingDots.visibility = View.VISIBLE
+
+        // delete
+
+        deleteHarvest(harvestID) {
+            if (!it) {
+                runOnUiThread {
+                    Toast.makeText(applicationContext, "Error deleting!", Toast.LENGTH_LONG).show()
+                    saveButton.apply {
+                        text = getString(R.string.save)
+                        isEnabled = true
+                    }
+                    loadingDots.visibility = View.GONE
+                }
+            }
+
+            else {
+                // finish
+                runOnUiThread { finish() }
             }
         }
     }

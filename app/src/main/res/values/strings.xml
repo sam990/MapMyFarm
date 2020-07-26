@@ -43,4 +43,7 @@
     <string name="err_saving_details">Error saving details</string>
     <string name="mapmyfarm_contact">tel:+918374474447</string>
     <string name="cancel">Cancel</string>
+    <string name="edit_profile">Edit Profile</string>
+    <string name="profile">Profile</string>
+    <string name="delete_harvest">Delete Harvest</string>
 </resources>

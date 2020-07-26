@@ -19,19 +19,47 @@
 
 
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/delete_area"
-        style="@style/Widget.MaterialComponents.FloatingActionButton"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|right"
+        android:layout_gravity="bottom|end"
 
         android:layout_marginBottom="16dp"
         android:layout_marginEnd="16dp"
+        >
 
-        app:srcCompat="@drawable/ic_delete"
-        app:tint="@android:color/white" />
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/delete_farm"
+            style="@style/Widget.MaterialComponents.FloatingActionButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
 
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+
+            app:srcCompat="@drawable/ic_delete"
+            app:tint="@android:color/white" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/edit_farm"
+            style="@style/Widget.MaterialComponents.FloatingActionButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:layout_marginEnd="16dp"
+
+            app:layout_constraintEnd_toStartOf="@id/delete_farm"
+            app:layout_constraintTop_toTopOf="@id/delete_farm"
+            app:layout_constraintBottom_toBottomOf="@+id/delete_farm"
+
+            app:fabSize="mini"
+            app:srcCompat="@drawable/ic_edit"
+            app:tint="@android:color/white" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <include layout="@layout/farm_bottomsheet"/>
 
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

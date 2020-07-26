@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import java.text.FieldPosition
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.ArrayList
 
 
 typealias OnHarvestCardClickListener = (String, String) -> Unit
@@ -25,6 +26,8 @@ class FarmViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
     private val areaView: TextView = view.findViewById(R.id.cardview_area_value)
     private val expandView: LinearLayout = view.findViewById(R.id.expanded_view)
 
+    private val addHarvestView: View = LayoutInflater.from(expandView.context).inflate(R.layout.add_harvest_cardview, expandView, false)
+    private val harvestViews = ArrayList<View>()
 
     fun bindTo(farm: Farm) {
         farmIDView.text = farm.farmID.toString().padStart(3, '0')
@@ -34,10 +37,14 @@ class FarmViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
 
     fun showExpandedView(farmHarvest: FarmHarvest, listener: OnHarvestCardClickListener, addNewListener: AddHarvestCardClickListener) {
 
+        val toInflate = farmHarvest.harvests.size - harvestViews.size
         val inflater = LayoutInflater.from(expandView.context)
-        for (harvest in farmHarvest.harvests) {
-            // inflate a view
-            val harvestView = inflater.inflate(R.layout.harvest_cardview, expandView, false)
+        for (i in 0 until toInflate) {
+            harvestViews.add(inflater.inflate(R.layout.harvest_cardview, expandView, false))
+        }
+
+        farmHarvest.harvests.forEachIndexed { i, harvest ->
+            val harvestView = harvestViews[i]
             harvestView.findViewById<TextView>(R.id.cardview_harvest).text = harvest.crop
             harvestView.findViewById<TextView>(R.id.cardview_sowdate).text = sdf.format(harvest.sowingDate)
             // attach listener
@@ -47,8 +54,6 @@ class FarmViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
             expandView.addView(harvestView)
         }
 
-        // add new Harvest view
-        val addHarvestView = inflater.inflate(R.layout.add_harvest_cardview, expandView, false)
         // set listener
         addHarvestView.setOnClickListener {
             addNewListener(farmHarvest.farmID)

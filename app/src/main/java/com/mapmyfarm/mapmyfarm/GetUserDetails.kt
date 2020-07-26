@@ -13,14 +13,14 @@ import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputLayout
 import java.lang.Exception
 
-class GetUserDetails : AppCompatActivity() {
+open class GetUserDetails : AppCompatActivity() {
 
-    lateinit var firstName : TextInputLayout
-    lateinit var lastName : TextInputLayout
-    lateinit var locale : TextInputLayout
-    lateinit var district : TextInputLayout
-    lateinit var state : TextInputLayout
-    lateinit var email : TextInputLayout
+    lateinit var firstNameInput : TextInputLayout
+    lateinit var lastNameInput : TextInputLayout
+    lateinit var localeInput : TextInputLayout
+    lateinit var districtInput : TextInputLayout
+    lateinit var stateInput : TextInputLayout
+    lateinit var emailInput : TextInputLayout
     lateinit var loadingDots: LoadingDots
     lateinit var saveButton: MaterialButton
 
@@ -40,12 +40,12 @@ class GetUserDetails : AppCompatActivity() {
         supportActionBar?.setLogo(R.drawable.actionbar_logo)
         supportActionBar?.setDisplayUseLogoEnabled(true)
 
-        firstName = findViewById(R.id.first_name_input)
-        lastName = findViewById(R.id.last_name_input)
-        locale = findViewById(R.id.locale_input)
-        district = findViewById(R.id.district_input)
-        state = findViewById(R.id.state_input)
-        email = findViewById(R.id.email_input)
+        firstNameInput = findViewById(R.id.first_name_input)
+        lastNameInput = findViewById(R.id.last_name_input)
+        localeInput = findViewById(R.id.locale_input)
+        districtInput = findViewById(R.id.district_input)
+        stateInput = findViewById(R.id.state_input)
+        emailInput = findViewById(R.id.email_input)
         loadingDots = findViewById(R.id.details_save_loadingdots)
         saveButton = findViewById(R.id.user_details_save)
         saveButton.setOnClickListener {
@@ -62,53 +62,53 @@ class GetUserDetails : AppCompatActivity() {
 
     private fun verifyInputs() : Boolean {
         var allOkay = true
-        firstNameString = firstName.editText?.text.toString()
+        firstNameString = firstNameInput.editText?.text.toString()
         if (firstNameString.isEmpty()){
-            firstName.error = getString(R.string.empty_field)
+            firstNameInput.error = getString(R.string.empty_field)
             allOkay = false
         } else {
-            firstName.error = null
+            firstNameInput.error = null
         }
 
-        lastNameString = lastName.editText?.text.toString()
+        lastNameString = lastNameInput.editText?.text.toString()
         if (lastNameString.isEmpty()){
-            lastName.error = getString(R.string.empty_field)
+            lastNameInput.error = getString(R.string.empty_field)
             allOkay = false
         } else {
-            lastName.error = null
+            lastNameInput.error = null
         }
 
-        localeString = locale.editText?.text.toString()
+        localeString = localeInput.editText?.text.toString()
         if(localeString.isEmpty()) {
-            locale.error = getString(R.string.empty_field)
+            localeInput.error = getString(R.string.empty_field)
             allOkay = false
         } else {
-            locale.error = null
+            localeInput.error = null
         }
 
-        districtString = district.editText?.text.toString()
+        districtString = districtInput.editText?.text.toString()
         if(districtString.isEmpty()) {
-            district.error = getString(R.string.empty_field)
+            districtInput.error = getString(R.string.empty_field)
             allOkay = false
         } else {
-            district.error = null
+            districtInput.error = null
         }
 
-        stateString = state.editText?.text.toString()
+        stateString = stateInput.editText?.text.toString()
         if(stateString.isEmpty()){
-            state.error = getString(R.string.empty_field)
+            stateInput.error = getString(R.string.empty_field)
             allOkay = false
         } else {
-            state.error = null
+            stateInput.error = null
         }
 
-        emailString = email.editText?.text.toString()
+        emailString = emailInput.editText?.text.toString()
         if(emailString.isNotEmpty() &&
                 !android.util.Patterns.EMAIL_ADDRESS.matcher(emailString).matches()){
-            email.error = getString(R.string.email_not_valid)
+            emailInput.error = getString(R.string.email_not_valid)
             allOkay = false
         } else {
-            email.error = null
+            emailInput.error = null
         }
 
         return allOkay
@@ -142,7 +142,7 @@ class GetUserDetails : AppCompatActivity() {
     }
 
     //
-    private fun successUpdate() {
+    protected open fun successUpdate() {
         loadingDots.visibility = View.GONE
         saveButton.text = getString(R.string.save)
         saveUserDetailsLocal(this, firstNameString , lastNameString,

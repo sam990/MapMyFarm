@@ -466,7 +466,7 @@ class TraceFarm : FragmentActivity(), OnMapReadyCallback {
         sheetSave.post { sheetSave.text = getString(R.string.save) }
         runOnUiThread {
             closeBottomSheet()
-            val myIntent = Intent(this, FarmInput::class.java)
+            val myIntent = Intent(this, HarvestDetailsInput::class.java)
             myIntent.putExtra("FARM_ID", farmID)
             startActivity(myIntent)
             finish()

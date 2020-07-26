@@ -41,6 +41,14 @@ class Dashboard : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_dashboard)
+        title = "Dashboard"
+
+        supportActionBar?.setDisplayShowHomeEnabled(true)
+        supportActionBar?.setLogo(R.drawable.actionbar_logo)
+        supportActionBar?.setDisplayUseLogoEnabled(true)
+
+
+
         recyclerView = findViewById(R.id.farm_list_recycler_view)
         recyclerView.itemAnimator = DefaultItemAnimator()
         val layoutManager: RecyclerView.LayoutManager = LinearLayoutManager(this)
@@ -75,17 +83,16 @@ class Dashboard : AppCompatActivity() {
         findViewById<MaterialButton>(R.id.add_farm_button).setOnClickListener {
             initialiseAddFarm()
         }
-
-        findViewById<MaterialButton>(R.id.dashboard_contact).setOnClickListener {
+        /*findViewById<MaterialButton>(R.id.dashboard_contact).setOnClickListener {
             val callIntent = Intent(Intent.ACTION_DIAL, Uri.parse(getString(R.string.mapmyfarm_contact)))
             startActivity(callIntent)
         }
 
-        initialiseAbout()
-
         findViewById<MaterialButton>(R.id.dashboard_about).setOnClickListener {
             showAbout()
-        }
+        }*/
+        initialiseAbout()
+
         fetchFromNetwork = intent.getBooleanExtra("LOAD_FROM_SERVER", false)
         FarmsDataStore.initialiseRoomDB(this)
         startFetchingList()
@@ -97,15 +104,37 @@ class Dashboard : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.order == 100){
-            logoutUser()
-            return true
+
+        when(item.itemId) {
+            R.id.action_logout -> {
+                logoutUser()
+                return true
+            }
+
+            R.id.action_refresh -> {
+                fetchFromNetwork = true
+                startFetchingList()
+                return true
+            }
+
+            R.id.action_contact -> {
+                val callIntent = Intent(Intent.ACTION_DIAL, Uri.parse(getString(R.string.mapmyfarm_contact)))
+                startActivity(callIntent)
+                return true
+            }
+
+            R.id.action_about -> {
+                showAbout()
+                return true
+            }
+
+            R.id.action_edit_details -> {
+                val myIntent = Intent(this, UpdateUserDetails::class.java)
+                startActivity(myIntent)
+                return true
+            }
         }
-        else if (item.order == 101) {
-            fetchFromNetwork = true
-            startFetchingList()
-            return true
-        }
+
         return super.onOptionsItemSelected(item)
     }
 
@@ -150,11 +179,13 @@ class Dashboard : AppCompatActivity() {
                         runOnUiThread { emptyView.visibility = View.GONE }
                     }
                     val newList = FarmsDataStore.farmsHarvests.toList()
-                    farmAdapter.submitList(newList)
+                    runOnUiThread { farmAdapter.submitList(newList) }
                 }
 
                 else {
-                    Toast.makeText(applicationContext, "Unable to get data", Toast.LENGTH_LONG).show()
+                    runOnUiThread {
+                        Toast.makeText(applicationContext, "Unable to get data", Toast.LENGTH_LONG).show()
+                    }
                 }
             }
         if(fetchFromNetwork){
@@ -165,14 +196,14 @@ class Dashboard : AppCompatActivity() {
     }
 
     private fun onHarvestClick(farmID: String, harvestID: String) {
-        val myIntent = Intent(this, FarmEdit::class.java)
+        val myIntent = Intent(this, HarvestEdit::class.java)
         myIntent.putExtra("FARM_ID", farmID)
         myIntent.putExtra("HARVEST_ID", harvestID)
         startActivity(myIntent)
     }
 
     private fun addHarvest(farmID: String) {
-        val myIntent = Intent(this, FarmInput::class.java)
+        val myIntent = Intent(this, HarvestDetailsInput::class.java)
         myIntent.putExtra("FARM_ID", farmID)
         startActivity(myIntent)
     }

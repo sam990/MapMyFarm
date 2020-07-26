@@ -7,4 +7,10 @@
         android:orderInCategory="100"
         android:title="@string/view_farm"
         app:showAsAction="ifRoom"/>
+
+    <item
+        android:id="@+id/delete_harvest_menu"
+        android:orderInCategory="101"
+        android:title="@string/delete_harvest"
+        app:showAsAction="never"/>
 </menu>

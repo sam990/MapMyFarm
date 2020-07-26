@@ -24,8 +24,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".FarmDisplay"></activity>
-        <activity android:name=".FarmInput" />
-        <activity android:name=".FarmEdit" />
+        <activity android:name=".HarvestDetailsInput" />
+        <activity android:name=".HarvestEdit" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -43,6 +43,7 @@
             android:label="@string/title_activity_trace_farm" />
         <activity android:name=".Dashboard" />
         <activity android:name=".GetUserDetails" />
+        <activity android:name=".UpdateUserDetails" />
         <activity
             android:name=".GetOTP"
             android:theme="@style/AppTheme.NoActionBar" />

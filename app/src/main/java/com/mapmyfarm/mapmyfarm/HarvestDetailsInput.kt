@@ -20,7 +20,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 
-open class FarmInput : AppCompatActivity() {
+open class HarvestDetailsInput : AppCompatActivity() {
 
     lateinit var saveButton: MaterialButton
     lateinit var cancelButton: MaterialButton
