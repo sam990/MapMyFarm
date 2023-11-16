@@ -1,0 +1,16 @@
+{
+    "UserAgent": "aws-amplify-cli/2.0",
+    "Version": "1.0",
+    "api": {
+        "plugins": {
+            "awsAPIPlugin": {
+                "Farms API": {
+                    "endpointType": "GraphQL",
+                    "endpoint": "https://lpukfhue4nhknb4pnugm2els6y.appsync-api.ap-south-1.amazonaws.com/graphql",
+                    "region": "ap-south-1",
+                    "authorizationType": "AMAZON_COGNITO_USER_POOLS"
+                }
+            }
+        }
+    }
+}
